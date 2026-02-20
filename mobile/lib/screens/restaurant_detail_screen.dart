@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/restaurant.dart';
 import '../providers/cart_provider.dart';
+import '../services/api_service.dart';
 import '../widgets/menu_item_card.dart';
 import 'cart_screen.dart';
 
@@ -21,81 +22,124 @@ class RestaurantDetailScreen extends StatefulWidget {
     required this.rating,
     required this.deliveryTime,
     required this.location,
-  });
+ });
 
   @override
   State<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();
 }
 
 class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
+  final ApiService _apiService = ApiService();
   bool isVegOnly = false;
   String selectedCategory = 'All';
-  
-  // Mock menu items - In production, fetch from API
-  final List<MenuItem> menuItems = [
-    MenuItem(
-      id: '1',
-      name: 'Chicken Biryani',
-      description: 'Hyderabadi style with raita and salan',
-      price: 320,
-      imageUrl: '',
-      isVeg: false,
-      isBestseller: true,
-      rating: 4.5,
-      ratingsCount: 234,
-      category: 'Biryani',
-    ),
-    MenuItem(
-      id: '2',
-      name: 'Veg Biryani',
-      description: 'Mixed vegetables with aromatic spices',
-      price: 280,
-      imageUrl: '',
-      isVeg: true,
-      rating: 4.3,
-      ratingsCount: 156,
-      category: 'Biryani',
-    ),
-    MenuItem(
-      id: '3',
-      name: 'Paneer Tikka',
-      description: 'Tandoori paneer with mint chutney',
-      price: 240,
-      imageUrl: '',
-      isVeg: true,
-      isBestseller: true,
-      rating: 4.6,
-      ratingsCount: 189,
-      category: 'Starters',
-    ),
-    MenuItem(
-      id: '4',
-      name: 'Chicken 65',
-      description: 'Spicy fried chicken with curry leaves',
-      price: 260,
-      imageUrl: '',
-      isVeg: false,
-      rating: 4.4,
-      ratingsCount: 201,
-      category: 'Starters',
-    ),
-    MenuItem(
-      id: '5',
-      name: 'Butter Naan',
-      description: 'Soft naan with butter',
-      price: 40,
-      imageUrl: '',
-      isVeg: true,
-      rating: 4.2,
-      ratingsCount: 98,
-      category: 'Breads',
-    ),
-  ];
+  List<MenuItem> menuItems = [];
+  List<String> availableCategories = ['All'];
+  bool isLoading = true;
+  String? errorMessage;
 
-  List<String> get categories {
-    final cats = menuItems.map((item) => item.category).toSet().toList();
-    return ['All', ...cats];
+  @override
+  void initState() {
+    super.initState();
+    _loadMenu();
   }
+
+  Future<void> _loadMenu() async {
+    try {
+      setState(() {
+        isLoading = true;
+        errorMessage = null;
+      });
+
+      final response = await _apiService.getMenu(widget.restaurantId);
+      
+      if (response['success'] == true && response['data'] != null) {
+        final data = response['data'];
+        final itemsList = data['menuItems'] as List<dynamic>? ?? [];
+        final categoriesList = data['categories'] as List<dynamic>? ?? ['All'];
+        
+        setState(() {
+          menuItems = itemsList.map((item) => MenuItem.fromJson(item)).toList();
+          availableCategories = categoriesList.map((c) => c.toString()).toList();
+          isLoading = false;
+        });
+      } else {
+        throw Exception('Invalid response format');
+      }
+    } catch (e) {
+      setState(() {
+        errorMessage = e.toString();
+        isLoading = false;
+        // Use mock data as fallback
+        _useMockData();
+      });
+    }
+  }
+
+  void _useMockData() {
+    // Fallback mock menu items
+    menuItems = [
+      MenuItem(
+        id: '1',
+        name: 'Chicken Biryani',
+        description: 'Hyderabadi style with raita and salan',
+        price: 320,
+        imageUrl: 'https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=400',
+        isVeg: false,
+        isBestseller: true,
+        rating: 4.5,
+        ratingsCount: 234,
+        category: 'Biryani',
+      ),
+      MenuItem(
+        id: '2',
+        name: 'Veg Biryani',
+        description: 'Mixed vegetables with aromatic spices',
+        price: 280,
+        imageUrl: 'https://images.unsplash.com/photo-1596797038530-2c107229654b?w=400',
+        isVeg: true,
+        rating: 4.3,
+        ratingsCount: 156,
+        category: 'Biryani',
+      ),
+      MenuItem(
+        id: '3',
+        name: 'Paneer Tikka',
+        description: 'Tandoori paneer with mint chutney',
+        price: 240,
+        imageUrl: 'https://images.unsplash.com/photo-1631452180519-c014fe946bc7?w=400',
+        isVeg: true,
+        isBestseller: true,
+        rating: 4.6,
+        ratingsCount: 189,
+        category: 'Starters',
+      ),
+      MenuItem(
+        id: '4',
+        name: 'Chicken 65',
+        description: 'Spicy fried chicken with curry leaves',
+        price: 260,
+        imageUrl: 'https://images.unsplash.com/photo-1610057099443-fde8c4d50f91?w=400',
+        isVeg: false,
+        rating: 4.4,
+        ratingsCount: 201,
+        category: 'Starters',
+      ),
+      MenuItem(
+        id: '5',
+        name: 'Butter Naan',
+        description: 'Soft naan with butter',
+        price: 40,
+        imageUrl: 'https://images.unsplash.com/photo-1601050690597-df0568f70950?w=400',
+        isVeg: true,
+        rating: 4.2,
+        ratingsCount: 98,
+        category: 'Breads',
+      ),
+    ];
+    availableCategories = ['All', 'Biryani', 'Starters', 'Breads'];
+  }
+
+  List<String> get categories => availableCategories;
 
   List<MenuItem> get filteredItems {
     return menuItems.where((item) {
@@ -287,18 +331,61 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           // Menu Items
           SliverPadding(
             padding: const EdgeInsets.only(top: 8),
-            sliver: SliverList(
-              delegate: SliverChildBuilderDelegate(
-                (context, index) {
-                  return MenuItemCard(
-                    menuItem: filteredItems[index],
-                    restaurantId: widget.restaurantId,
-                    restaurantName: widget.restaurantName,
-                  );
-                },
-                childCount: filteredItems.length,
-              ),
-            ),
+            sliver: isLoading
+                ? SliverFillRemaining(
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const CircularProgressIndicator(
+                            color: Color(0xFFEA580C),
+                          ),
+                          const SizedBox(height: 16),
+                          Text(
+                            'Loading menu...',
+                            style: TextStyle(color: Colors.grey.shade600),
+                          ),
+                        ],
+                      ),
+                    ),
+                  )
+                : filteredItems.isEmpty
+                    ? SliverFillRemaining(
+                        child: Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.restaurant_menu,
+                                size: 64,
+                                color: Colors.grey.shade300,
+                              ),
+                              const SizedBox(height: 16),
+                              Text(
+                                isVegOnly
+                                    ? 'No vegetarian items in this category'
+                                    : 'No items found',
+                                style: TextStyle(
+                                  color: Colors.grey.shade600,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      )
+                    : SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            return MenuItemCard(
+                              menuItem: filteredItems[index],
+                              restaurantId: widget.restaurantId,
+                              restaurantName: widget.restaurantName,
+                            );
+                          },
+                          childCount: filteredItems.length,
+                        ),
+                      ),
           ),
 
           // Bottom Padding

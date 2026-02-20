@@ -4,9 +4,12 @@ import '../services/api_service.dart';
 import '../models/recommendation.dart';
 import '../widgets/category_card.dart';
 import '../widgets/recommendation_card.dart';
+import '../widgets/shimmer_loading.dart';
+import '../widgets/custom_page_route.dart';
 import '../providers/cart_provider.dart';
 import 'search_screen.dart';
 import 'cart_screen.dart';
+import 'profile_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -100,6 +103,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               actions: [
+                IconButton(
+                  icon: const Icon(Icons.account_circle_outlined, color: Color(0xFFEA580C)),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      SlidePageRoute(page: const ProfileScreen()),
+                    );
+                  },
+                ),
                 if (!cart.isEmpty)
                   Stack(
                     children: [
@@ -108,7 +120,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () {
                           Navigator.push(
                             context,
-                            MaterialPageRoute(builder: (context) => const CartScreen()),
+                            SlidePageRoute(page: const CartScreen()),
                           );
                         },
                       ),
@@ -142,7 +154,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const SearchScreen()),
+                    SlidePageRoute(page: const SearchScreen()),
                   );
                 },
                 child: Container(
@@ -344,15 +356,12 @@ class _HomeScreenState extends State<HomeScreen> {
 
               // Loading State
               if (isLoading)
-                const SliverFillRemaining(
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CircularProgressIndicator(color: Color(0xFFEA580C)),
-                        SizedBox(height: 16),
-                        Text('Finding the best deals for you...'),
-                      ],
+                SliverPadding(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  sliver: SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) => const RestaurantCardSkeleton(),
+                      childCount: 3,
                     ),
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/recommendation.dart';
+import '../widgets/custom_page_route.dart';
 import '../screens/restaurant_detail_screen.dart';
 
 class RecommendationCard extends StatelessWidget {
@@ -43,8 +44,8 @@ class RecommendationCard extends StatelessWidget {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(
-              builder: (context) => RestaurantDetailScreen(
+            SlidePageRoute(
+              page: RestaurantDetailScreen(
                 restaurantId: recommendation.id,
                 restaurantName: recommendation.title,
                 cuisine: recommendation.cuisine,

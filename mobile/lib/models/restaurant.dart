@@ -85,13 +85,13 @@ class MenuItem {
   
   factory MenuItem.fromJson(Map<String, dynamic> json) {
     return MenuItem(
-      id: json['id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
       price: (json['price'] ?? 0).toDouble(),
       imageUrl: json['imageUrl'] ?? '',
       isVeg: json['isVeg'] ?? true,
-      isBestseller: json['isBestseller'] ?? false,
+      isBestseller: json['isBestseller'] ?? json['tags']?.contains('bestseller') ?? false,
       rating: (json['rating'] ?? 0).toDouble(),
       ratingsCount: json['ratingsCount'] ?? 0,
       category: json['category'] ?? '',

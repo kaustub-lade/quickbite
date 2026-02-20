@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'screens/home_screen.dart';
+import 'screens/login_screen.dart';
 import 'services/api_service.dart';
 import 'providers/cart_provider.dart';
+import 'providers/auth_provider.dart';
 
 void main() {
   runApp(const QuickBiteApp());
@@ -18,6 +19,7 @@ class QuickBiteApp extends StatelessWidget {
       providers: [
         Provider(create: (_) => ApiService()),
         ChangeNotifierProvider(create: (_) => CartProvider()),
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
       ],
       child: MaterialApp(
         title: 'QuickBite',
@@ -29,14 +31,14 @@ class QuickBiteApp extends StatelessWidget {
           ),
           textTheme: GoogleFonts.interTextTheme(),
           useMaterial3: true,
-          cardTheme: CardTheme(
+          cardTheme: const CardThemeData(
             elevation: 2,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.all(Radius.circular(12)),
             ),
           ),
         ),
-        home: const HomeScreen(),
+        home: const LoginScreen(),
       ),
     );
   }
