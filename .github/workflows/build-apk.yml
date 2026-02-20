@@ -1,5 +1,5 @@
-name: Build Android APK
-on:
+name: "Build Android APK"
+"on":
   push:
     branches:
       - main
@@ -35,7 +35,7 @@ jobs:
         working-directory: ./mobile
         run: |
           echo "# API Configuration" > .env
-          echo "API_BASE_URL=https://your-production-api.com" >> .env
+          echo "API_BASE_URL=http://192.168.1.35:3000" >> .env
           cat .env
 
       - name: Get Flutter Dependencies
