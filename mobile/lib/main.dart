@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'screens/home_screen.dart';
 import 'services/api_service.dart';
+import 'providers/cart_provider.dart';
 
 void main() {
   runApp(const QuickBiteApp());
@@ -16,6 +17,7 @@ class QuickBiteApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         Provider(create: (_) => ApiService()),
+        ChangeNotifierProvider(create: (_) => CartProvider()),
       ],
       child: MaterialApp(
         title: 'QuickBite',

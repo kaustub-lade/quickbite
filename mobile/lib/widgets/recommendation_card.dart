@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../models/recommendation.dart';
+import '../screens/restaurant_detail_screen.dart';
 
 class RecommendationCard extends StatelessWidget {
   final Recommendation recommendation;
@@ -40,7 +41,19 @@ class RecommendationCard extends StatelessWidget {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: () {
-          // TODO: Navigate to restaurant details or order
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RestaurantDetailScreen(
+                restaurantId: recommendation.id,
+                restaurantName: recommendation.title,
+                cuisine: recommendation.cuisine,
+                rating: recommendation.rating,
+                deliveryTime: recommendation.deliveryTime,
+                location: recommendation.location,
+              ),
+            ),
+          );
         },
         borderRadius: BorderRadius.circular(16),
         child: Padding(
