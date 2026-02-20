@@ -193,5 +193,3 @@ class MenuItemSkeleton extends StatelessWidget {
     );
   }
 }
-
-```

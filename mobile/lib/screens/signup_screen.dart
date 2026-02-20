@@ -76,13 +76,13 @@ class _SignupScreenState extends State<SignupScreen> {
           ),
         );
       }
-    final authProvider = context.watch<AuthProvider>();
-    
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = context.watch<AuthProvider>();
+    
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -355,7 +355,9 @@ class _SignupScreenState extends State<SignupScreen> {
                   
                   const SizedBox(height: 24),
                   
-                  // Sign Up BuauthProvider.isLoading ? null : _handleSignup,
+                  // Sign Up Button
+                  ElevatedButton(
+                    onPressed: authProvider.isLoading ? null : _handleSignup,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xFFEA580C),
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -364,9 +366,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       elevation: 2,
                     ),
-                    child: authProvider.ion: 2,
-                    ),
-                    child: _isLoading
+                    child: authProvider.isLoading
                         ? const SizedBox(
                             height: 20,
                             width: 20,
