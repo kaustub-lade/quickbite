@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../models/restaurant.dart';
 import '../providers/cart_provider.dart';
+import '../models/platform_price.dart';
+import 'price_comparison_widget.dart';
 
 class MenuItemCard extends StatelessWidget {
   final MenuItem menuItem;
@@ -94,13 +96,36 @@ class MenuItemCard extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 
-                // Price
-                Text(
-                  '₹${menuItem.price.toStringAsFixed(0)}',
-                  style: const TextStyle(
-                    fontSize: 15,
-                    fontWeight: FontWeight.w500,
-                  ),
+                // Price with savings badge
+                Row(
+                  children: [
+                    Text(
+                      '₹${menuItem.price.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    if (menuItem.hasPlatformPricing && menuItem.maxSavings > 0) ...[
+                      const SizedBox(width: 6),
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 2),
+                        decoration: BoxDecoration(
+                          color: Colors.green.shade600,
+                          borderRadius: BorderRadius.circular(3),
+                        ),
+                        child: Text(
+                          'SAVE ₹${menuItem.maxSavings.toStringAsFixed(0)}',
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ],
                 ),
                 const SizedBox(height: 6),
                 
@@ -131,6 +156,17 @@ class MenuItemCard extends StatelessWidget {
                         ),
                       ),
                     ],
+                  ),
+                ],
+                
+                // Price comparison widget
+                if (menuItem.hasPlatformPricing && menuItem.platformPrices.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  PriceComparisonWidget(
+                    itemName: menuItem.name,
+                    platformPrices: menuItem.platformPrices.map((p) => PlatformPrice.fromJson(p)).toList(),
+                    bestDeal: menuItem.bestDeal != null ? BestDeal.fromJson(menuItem.bestDeal!) : null,
+                    compact: true, // Use compact view in menu card
                   ),
                 ],
               ],

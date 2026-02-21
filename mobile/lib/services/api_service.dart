@@ -77,6 +77,34 @@ class ApiService {
     }
   }
 
+  Future<Map<String, dynamic>> getPriceComparison(String restaurantId, {String? itemName}) async {
+    try {
+      var uri = Uri.parse('$baseUrl/api/menu/price-comparison');
+      
+      // Add query parameters
+      final queryParams = <String, String>{'restaurantId': restaurantId};
+      if (itemName != null) {
+        queryParams['itemName'] = itemName;
+      }
+      
+      uri = uri.replace(queryParameters: queryParams);
+
+      final response = await http.get(
+        uri,
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data;
+      } else {
+        throw Exception('Failed to load price comparison: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch price comparison: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(

@@ -50,16 +50,25 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
         errorMessage = null;
       });
 
-      final response = await _apiService.getMenu(widget.restaurantId);
+      // Fetch menu with price comparison data
+      final response = await _apiService.getPriceComparison(widget.restaurantId);
       
       if (response['success'] == true && response['data'] != null) {
         final data = response['data'];
         final itemsList = data['menuItems'] as List<dynamic>? ?? [];
-        final categoriesList = data['categories'] as List<dynamic>? ?? ['All'];
+        
+        // Extract unique categories from items
+        final categoriesSet = <String>{'All'};
+        for (var item in itemsList) {
+          final category = item['category'] as String?;
+          if (category != null && category.isNotEmpty) {
+            categoriesSet.add(category);
+          }
+        }
         
         setState(() {
           menuItems = itemsList.map((item) => MenuItem.fromJson(item)).toList();
-          availableCategories = categoriesList.map((c) => c.toString()).toList();
+          availableCategories = categoriesSet.toList();
           isLoading = false;
         });
       } else {
@@ -72,6 +81,8 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
         // Use mock data as fallback
         _useMockData();
       });
+      // Note: Price comparison not available in mock data
+      print('Failed to load price comparison, using fallback menu: $e');
     }
   }
 

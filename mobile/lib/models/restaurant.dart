@@ -70,6 +70,11 @@ class MenuItem {
   final int ratingsCount;
   final String category;
   
+  // Price comparison fields
+  final bool hasPlatformPricing;
+  final List<Map<String, dynamic>> platformPrices;
+  final Map<String, dynamic>? bestDeal;
+  
   MenuItem({
     required this.id,
     required this.name,
@@ -81,20 +86,30 @@ class MenuItem {
     this.rating = 0.0,
     this.ratingsCount = 0,
     required this.category,
+    this.hasPlatformPricing = false,
+    this.platformPrices = const [],
+    this.bestDeal,
   });
   
   factory MenuItem.fromJson(Map<String, dynamic> json) {
+    // Handle both regular menu response and price comparison response
+    final platformPricesList = json['platformPrices'] as List<dynamic>? ?? [];
+    final bestDealData = json['bestDeal'] as Map<String, dynamic>?;
+    
     return MenuItem(
       id: json['_id'] ?? json['id'] ?? '',
       name: json['name'] ?? '',
       description: json['description'] ?? '',
-      price: (json['price'] ?? 0).toDouble(),
+      price: (json['price'] ?? json['basePrice'] ?? 0).toDouble(),
       imageUrl: json['imageUrl'] ?? '',
       isVeg: json['isVeg'] ?? true,
       isBestseller: json['isBestseller'] ?? json['tags']?.contains('bestseller') ?? false,
       rating: (json['rating'] ?? 0).toDouble(),
       ratingsCount: json['ratingsCount'] ?? 0,
       category: json['category'] ?? '',
+      hasPlatformPricing: json['hasPlatformPricing'] ?? false,
+      platformPrices: platformPricesList.map((p) => p as Map<String, dynamic>).toList(),
+      bestDeal: bestDealData,
     );
   }
   
@@ -110,7 +125,18 @@ class MenuItem {
       'rating': rating,
       'ratingsCount': ratingsCount,
       'category': category,
+      'hasPlatformPricing': hasPlatformPricing,
+      'platformPrices': platformPrices,
+      'bestDeal': bestDeal,
     };
+  }
+  
+  // Helper to get maximum savings
+  double get maxSavings {
+    if (platformPrices.isEmpty) return 0;
+    return platformPrices
+        .map((p) => (p['savings'] as num?)?.toDouble() ?? 0)
+        .reduce((max, savings) => savings > max ? savings : max);
   }
 }
 
