@@ -4,6 +4,7 @@ import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import 'login_screen.dart';
 import 'order_history_screen.dart';
+import 'saved_addresses_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -228,8 +229,10 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.location_on_outlined,
               title: 'Saved Addresses',
               onTap: () {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(content: Text('Coming soon!')),
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => SavedAddressesScreen(userId: user.id),
+                  ),
                 );
               },
             ),

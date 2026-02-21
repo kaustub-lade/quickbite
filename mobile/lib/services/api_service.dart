@@ -211,4 +211,80 @@ class ApiService {
       throw Exception('Failed to fetch order: $e');
     }
   }
+
+  // Address Management APIs
+  Future<List<dynamic>> getSavedAddresses(String userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/addresses?userId=$userId'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['addresses'] as List;
+      } else {
+        throw Exception('Failed to fetch addresses: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch addresses: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> saveAddress(Map<String, dynamic> addressData) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/addresses'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(addressData),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 201) {
+        return json.decode(response.body);
+      } else {
+        final errorData = json.decode(response.body);
+        throw Exception(errorData['message'] ?? 'Failed to save address');
+      }
+    } catch (e) {
+      throw Exception('Failed to save address: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateAddress(String addressId, Map<String, dynamic> addressData) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$baseUrl/api/addresses'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'addressId': addressId,
+          ...addressData,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to update address: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to update address: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteAddress(String addressId) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$baseUrl/api/addresses?addressId=$addressId'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to delete address: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to delete address: $e');
+    }
+  }
 }
