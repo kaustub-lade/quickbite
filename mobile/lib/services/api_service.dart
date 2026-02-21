@@ -1,15 +1,14 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import '../models/recommendation.dart';
 import '../models/restaurant.dart';
 
 class ApiService {
-  // For local development - update this based on your setup
-  // Android emulator: http://10.0.2.2:3000
-  // iOS simulator: http://localhost:3000
-  // Physical device: http://YOUR_IP:3000
-  // Web/Desktop: http://localhost:3000
-  static const String baseUrl = 'http://localhost:3000'; // For Chrome/Web
+  // Read API URL from .env file
+  // During development: http://localhost:3000
+  // In production APK: https://quickbite-c016.onrender.com
+  static String get baseUrl => dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000';
   
   Future<RecommendationsResponse> getRecommendations(String category) async {
     try {
