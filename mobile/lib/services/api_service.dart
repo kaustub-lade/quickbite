@@ -341,4 +341,63 @@ class ApiService {
       throw Exception('Failed to delete address: $e');
     }
   }
+
+  // Payment APIs
+  Future<Map<String, dynamic>> createPaymentOrder({
+    required double amount,
+    String currency = 'INR',
+    String? orderId,
+    String? receipt,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/payment/create-order'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'amount': amount,
+          'currency': currency,
+          'orderId': orderId,
+          'receipt': receipt,
+        }),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        final errorData = json.decode(response.body);
+        throw Exception(errorData['error'] ?? 'Failed to create payment order');
+      }
+    } catch (e) {
+      throw Exception('Failed to create payment order: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> verifyPayment({
+    required String razorpayOrderId,
+    required String razorpayPaymentId,
+    required String razorpaySignature,
+    required String orderId,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/payment/verify'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'razorpay_order_id': razorpayOrderId,
+          'razorpay_payment_id': razorpayPaymentId,
+          'razorpay_signature': razorpaySignature,
+          'orderId': orderId,
+        }),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        final errorData = json.decode(response.body);
+        throw Exception(errorData['error'] ?? 'Payment verification failed');
+      }
+    } catch (e) {
+      throw Exception('Failed to verify payment: $e');
+    }
+  }
 }

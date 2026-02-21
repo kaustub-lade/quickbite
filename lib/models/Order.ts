@@ -24,8 +24,14 @@ export interface IOrder extends mongoose.Document {
   };
   status: 'pending' | 'confirmed' | 'preparing' | 'out_for_delivery' | 'delivered' | 'cancelled';
   platform: 'swiggy' | 'zomato' | 'ondc';
-  paymentStatus: 'pending' | 'completed' | 'failed';
+  paymentStatus: 'pending' | 'processing' | 'completed' | 'failed';
   paymentMethod?: 'cod' | 'online';
+  paymentDetails?: {
+    razorpayOrderId?: string;
+    razorpayPaymentId?: string;
+    razorpaySignature?: string;
+  };
+  paymentFailureReason?: string;
   specialInstructions?: string;
   createdAt: Date;
   updatedAt: Date;
@@ -76,13 +82,19 @@ const orderSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'completed', 'failed'],
+    enum: ['pending', 'processing', 'completed', 'failed'],
     default: 'pending'
   },
   paymentMethod: {
     type: String,
     enum: ['cod', 'online']
   },
+  paymentDetails: {
+    razorpayOrderId: { type: String },
+    razorpayPaymentId: { type: String },
+    razorpaySignature: { type: String }
+  },
+  paymentFailureReason: { type: String },
   specialInstructions: { type: String }
 }, {
   timestamps: true

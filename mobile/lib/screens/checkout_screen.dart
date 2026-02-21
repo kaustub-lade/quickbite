@@ -186,23 +186,59 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             : _instructionsController.text.trim(),
       };
 
-      final response = await apiService.placeOrder(orderData);
+      // If online payment is selected, process payment first
+      if (_paymentMethod == 'online') {
+        final response = await apiService.placeOrder(orderData);
 
-      if (response['success'] == true) {
-        // Clear cart after successful order
-        cartProvider.clear();
+        if (response['success'] == true) {
+          // Order created, now process payment
+          final orderId = response['order']['id'];
+          final totalAmount = cartProvider.totalPrice;
 
-        if (!mounted) return;
+          // Show payment processing dialog
+          if (!mounted) return;
+          final paymentSuccess = await _processOnlinePayment(
+            apiService, 
+            orderId, 
+            totalAmount
+          );
 
-        // Navigate to success screen
-        Navigator.of(context).pushReplacement(
-          MaterialPageRoute(
-            builder: (context) => OrderSuccessScreen(
-              orderNumber: response['order']['orderNumber'],
-              orderId: response['order']['id'],
+          if (!paymentSuccess) {
+            throw Exception('Payment was cancelled or failed');
+          }
+
+          // Payment successful, clear cart and navigate
+          cartProvider.clear();
+
+          if (!mounted) return;
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => OrderSuccessScreen(
+                orderNumber: response['order']['orderNumber'],
+                orderId: orderId,
+              ),
             ),
-          ),
-        );
+          );
+        }
+      } else {
+        // Cash on Delivery - proceed as before
+        final response = await apiService.placeOrder(orderData);
+
+        if (response['success'] == true) {
+          cartProvider.clear();
+
+          if (!mounted) return;
+
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => OrderSuccessScreen(
+                orderNumber: response['order']['orderNumber'],
+                orderId: response['order']['id'],
+              ),
+            ),
+          );
+        }
       }
     } catch (e) {
       if (!mounted) return;
@@ -219,6 +255,32 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           _isPlacingOrder = false;
         });
       }
+    }
+  }
+
+  Future<bool> _processOnlinePayment(
+    ApiService apiService,
+    String orderId,
+    double totalAmount,
+  ) async {
+    try {
+      // Show payment dialog
+      if (!mounted) return false;
+      
+      final paymentConfirmed = await showDialog<bool>(
+        context: context,
+        barrierDismissible: false,
+        builder: (context) => _PaymentDialog(
+          orderId: orderId,
+          amount: totalAmount,
+          apiService: apiService,
+        ),
+      );
+
+      return paymentConfirmed ?? false;
+    } catch (e) {
+      print('Payment processing error: $e');
+      return false;
     }
   }
 
@@ -586,11 +648,16 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               activeColor: const Color(0xFFEA580C),
             ),
             RadioListTile<String>(
-              title: const Text('Online Payment (Coming Soon)'),
+              title: const Text('Online Payment'),
               subtitle: const Text('UPI, Cards, Wallets'),
               value: 'online',
               groupValue: _paymentMethod,
-              onChanged: null, // Disabled for now
+              onChanged: (value) {
+                setState(() {
+                  _paymentMethod = value!;
+                });
+              },
+              activeColor: const Color(0xFFEA580C),
             ),
             const SizedBox(height: 24),
 
@@ -644,6 +711,164 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
           ],
         ),
       ),
+    );
+  }
+}
+
+// Payment Dialog Widget
+class _PaymentDialog extends StatefulWidget {
+  final String orderId;
+  final double amount;
+  final ApiService apiService;
+
+  const _PaymentDialog({
+    required this.orderId,
+    required this.amount,
+    required this.apiService,
+  });
+
+  @override
+  State<_PaymentDialog> createState() => _PaymentDialogState();
+}
+
+class _PaymentDialogState extends State<_PaymentDialog> {
+  bool _isProcessing = true;
+  String _status = 'Initializing payment...';
+  bool _paymentSuccess = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initiatePayment();
+  }
+
+  Future<void> _initiatePayment() async {
+    try {
+      setState(() {
+        _status = 'Creating payment order...';
+      });
+
+      // Create Razorpay order
+      final paymentOrder = await widget.apiService.createPaymentOrder(
+        amount: widget.amount,
+        orderId: widget.orderId,
+        receipt: 'receipt_${widget.orderId}',
+      );
+
+      if (!paymentOrder['success']) {
+        throw Exception(paymentOrder['error'] ?? 'Failed to create payment order');
+      }
+
+      setState(() {
+        _status = 'Processing payment...';
+      });
+
+      // Simulate payment processing (in production, this would open Razorpay SDK)
+      await Future.delayed(const Duration(seconds: 2));
+
+      // Mock payment response (in production, this comes from Razorpay SDK)
+      final razorpayOrderId = paymentOrder['order']['id'];
+      final razorpayPaymentId = 'pay_${DateTime.now().millisecondsSinceEpoch}';
+      final razorpaySignature = 'mock_signature_${DateTime.now().millisecondsSinceEpoch}';
+
+      setState(() {
+        _status = 'Verifying payment...';
+      });
+
+      // Verify payment
+      final verifyResponse = await widget.apiService.verifyPayment(
+        razorpayOrderId: razorpayOrderId,
+        razorpayPaymentId: razorpayPaymentId,
+        razorpaySignature: razorpaySignature,
+        orderId: widget.orderId,
+      );
+
+      if (verifyResponse['success']) {
+        setState(() {
+          _status = 'Payment successful!';
+          _paymentSuccess = true;
+          _isProcessing = false;
+        });
+
+        // Auto-close dialog after 2 seconds
+        await Future.delayed(const Duration(seconds: 2));
+        if (mounted) {
+          Navigator.of(context).pop(true);
+        }
+      } else {
+        throw Exception(verifyResponse['error'] ?? 'Payment verification failed');
+      }
+    } catch (e) {
+      setState(() {
+        _status = 'Payment failed: ${e.toString()}';
+        _paymentSuccess = false;
+        _isProcessing = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AlertDialog(
+      title: const Text('Online Payment'),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (_isProcessing)
+            const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFEA580C)),
+            ),
+          if (!_isProcessing && _paymentSuccess)
+            const Icon(
+              Icons.check_circle,
+              color: Colors.green,
+              size: 64,
+            ),
+          if (!_isProcessing && !_paymentSuccess)
+            const Icon(
+              Icons.error,
+              color: Colors.red,
+              size: 64,
+            ),
+          const SizedBox(height: 16),
+          Text(
+            _status,
+            textAlign: TextAlign.center,
+            style: const TextStyle(fontSize: 16),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            '₹${widget.amount.toStringAsFixed(2)}',
+            style: const TextStyle(
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFFEA580C),
+            ),
+          ),
+        ],
+      ),
+      actions: [
+        if (!_isProcessing && !_paymentSuccess)
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(false),
+            child: const Text('Cancel'),
+          ),
+        if (!_isProcessing && !_paymentSuccess)
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                _isProcessing = true;
+                _status = 'Retrying payment...';
+              });
+              _initiatePayment();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFEA580C),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Retry'),
+          ),
+      ],
     );
   }
 }
