@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'order_history_screen.dart';
 
 class OrderSuccessScreen extends StatelessWidget {
   final String orderNumber;
@@ -100,12 +101,16 @@ class OrderSuccessScreen extends StatelessWidget {
                 height: 56,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    // TODO: Navigate to order details
-                    Navigator.of(context).pop();
+                    // Navigate to order history
+                    Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(
+                        builder: (context) => const OrderHistoryScreen(),
+                      ),
+                    );
                   },
                   icon: const Icon(Icons.receipt_long),
                   label: const Text(
-                    'View Order Details',
+                    'View My Orders',
                     style: TextStyle(
                       fontSize: 16,
                       fontWeight: FontWeight.bold,

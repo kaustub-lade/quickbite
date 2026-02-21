@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/cart_provider.dart';
 import 'login_screen.dart';
+import 'order_history_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -199,6 +200,23 @@ class ProfileScreen extends StatelessWidget {
               icon: Icons.phone_outlined,
               title: 'Phone',
               value: user.phone,
+            ),
+          ]),
+
+          const SizedBox(height: 16),
+
+          // Orders Section
+          _buildSection(context, 'Orders', [
+            _buildActionTile(
+              icon: Icons.receipt_long,
+              title: 'My Orders',
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const OrderHistoryScreen(),
+                  ),
+                );
+              },
             ),
           ]),
 
