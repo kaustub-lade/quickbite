@@ -19,9 +19,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? selectedCategory;
-  List<Recommendation> recommendations = [];
+  String? selectedCategory  List<Recommendation> recommendations = [];
+  List<dynamic> popularRestaurants = [];
+  List<dynamic> trendingItems = [];
+  Map<String, dynamic> restaurantStats = {};
   bool isLoading = false;
+  bool isLoadingPopular = false;
+  bool isLoadingTrending = false;
   String? error;
 
   final List<Map<String, String>> categories = [
@@ -30,6 +34,52 @@ class _HomeScreenState extends State<HomeScreen> {
     {'emoji': '🍔', 'label': 'Burger', 'value': 'burger'},
     {'emoji': '🥗', 'label': 'Healthy', 'value': 'healthy'},
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    loadHomeData();
+  }
+
+  Future<void> loadHomeData() async {
+    // Load popular restaurants, trending items, and stats in parallel
+    setState(() {
+      isLoadingPopular = true;
+      isLoadingTrending = true;
+    });
+
+    try {
+      final apiService = context.read<ApiService>();
+      
+      // Fetch all data in parallel
+      final results = await Future.wait([
+        apiService.getPopularRestaurants(),
+        apiService.getTrendingItems(),
+        apiService.getRestaurantStats(),
+      ]);
+
+      setState(() {
+        popularRestaurants = results[0] as List<dynamic>;
+        trendingItems = results[1] as List<dynamic>;
+        restaurantStats = results[2] as Map<String, dynamic>;
+        isLoadingPopular = false;
+        isLoadingTrending = false;
+      });
+    } catch (e) {
+      setState(() {
+        isLoadingPopular = false;
+        isLoadingTrending = false;
+      });
+      // Silently fail - show empty sections instead of errors
+    }
+  }
+
+  int getCategoryCount(String category) {
+    if (restaurantStats.isEmpty) return 0;
+    final categoryCount = restaurantStats['categoryCount'];
+    if (categoryCount == null) return 0;
+    return categoryCount[category] ?? 0;
+  }
 
   Future<void> fetchRecommendations(String category) async {
     setState(() {
@@ -189,76 +239,240 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
-            // Banner/Promo Section
-            SliverToBoxAdapter(
-              child: Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16),
-                height: 140,
-                decoration: BoxDecoration(
-                  gradient: const LinearGradient(
-                    colors: [Color(0xFFEA580C), Color(0xFFDC2626)],
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
+            // Popular Near You Section
+            if (selectedCategory == null && !isLoadingPopular && popularRestaurants.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.local_fire_department, color: Color(0xFFEA580C), size: 24),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Popular Near You',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Stack(
-                  children: [
-                    Positioned(
-                      right: -20,
-                      bottom: -20,
-                      child: Icon(
-                        Icons.restaurant_menu,
-                        size: 120,
-                        color: Colors.white.withOpacity(0.1),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: const Text(
-                              '🎉 Special Offer',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          const Text(
-                            'Get 50% OFF',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const Text(
-                            'on your first order',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
                 ),
               ),
-            ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 180,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: popularRestaurants.length,
+                    itemBuilder: (context, index) {
+                      final restaurant = popularRestaurants[index];
+                      return Container(
+                        width: 280,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.05),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(12),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // Restaurant Image Placeholder
+                              Container(
+                                height: 80,
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [Color(0xFFEA580C).withOpacity(0.3), Color(0xFFDC2626).withOpacity(0.3)],
+                                  ),
+                                ),
+                                child: Center(
+                                  child: Icon(Icons.restaurant, size: 40, color: Color(0xFFEA580C)),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(12),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      restaurant['name'] ?? 'Restaurant',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Row(
+                                      children: [
+                                        const Icon(Icons.star, color: Colors.amber, size: 16),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          '${restaurant['rating'] ?? 4.0}',
+                                          style: const TextStyle(fontSize: 13),
+                                        ),
+                                        const SizedBox(width: 12),
+                                        const Icon(Icons.access_time, size: 16, color: Colors.grey),
+                                        const SizedBox(width: 4),
+                                        Text(
+                                          restaurant['deliveryTime'] ?? '30 mins',
+                                          style: TextStyle(fontSize: 13, color: Colors.grey.shade600),
+                                        ),
+                                      ],
+                                    ),
+                                    if (restaurant['orderCount'] != null && restaurant['orderCount'] > 0) ...[
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        '${restaurant['orderCount']} orders',
+                                        style: TextStyle(
+                                          fontSize: 12,
+                                          color: Color(0xFFEA580C),
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    ],
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            ],
 
-            const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            // Trending Now Section
+            if (selectedCategory == null && !isLoadingTrending && trendingItems.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.trending_up, color: Color(0xFFEA580C), size: 24),
+                      const SizedBox(width: 8),
+                      const Text(
+                        'Trending Now',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 160,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: trendingItems.length,
+                    itemBuilder: (context, index) {
+                      final item = trendingItems[index];
+                      return Container(
+                        width: 200,
+                        margin: const EdgeInsets.only(right: 12),
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: Colors.grey.shade200),
+                        ),
+                        padding: const EdgeInsets.all(12),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Container(
+                                  width: 8,
+                                  height: 8,
+                                  decoration: BoxDecoration(
+                                    color: item['isVeg'] == true ? Colors.green : Colors.red,
+                                    shape: BoxShape.circle,
+                                  ),
+                                ),
+                                const SizedBox(width: 6),
+                                Expanded(
+                                  child: Text(
+                                    item['name'] ?? 'Item',
+                                    style: const TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                    maxLines: 1,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 4),
+                            if (item['restaurant'] != null)
+                              Text(
+                                item['restaurant']['name'] ?? '',
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.grey.shade600,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                            const Spacer(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  '₹${item['price']}',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Color(0xFFEA580C),
+                                  ),
+                                ),
+                                if (item['orderCount'] != null && item['orderCount'] > 0)
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFFEA580C).withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Text(
+                                      '${item['orderCount']} sold',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: Color(0xFFEA580C),
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(child: SizedBox(height: 24)),
+            ],
+
+            const SliverToBoxAdapter(child: SizedBox(height: 0)),
 
             // Section Header
             SliverToBoxAdapter(
@@ -266,7 +480,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 padding: const EdgeInsets.symmetric(horizontal: 16),
                 child: Text(
                   selectedCategory == null 
-                      ? "What's on your mind?"
+                      ? "What would you like to eat?"
                       : 'Top picks for $selectedCategory',
                   style: const TextStyle(
                     fontSize: 20,
@@ -292,37 +506,50 @@ class _HomeScreenState extends State<HomeScreen> {
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final category = categories[index];
-                      return CategoryCard(
-                        emoji: category['emoji']!,
-                        label: category['label']!,
-                        isSelected: false,
+                      final count = getCategoryCount(category['value']!);
+                      return GestureDetector(
                         onTap: () => fetchRecommendations(category['value']!),
-                      );
-                    },
-                    childCount: categories.length,
-                  ),
-                ),
-              ),
-
-            // Category Selection
-            if (selectedCategory == null)
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                sliver: SliverGrid(
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    childAspectRatio: 1.2,
-                  ),
-                  delegate: SliverChildBuilderDelegate(
-                    (context, index) {
-                      final category = categories[index];
-                      return CategoryCard(
-                        emoji: category['emoji']!,
-                        label: category['label']!,
-                        isSelected: false,
-                        onTap: () => fetchRecommendations(category['value']!),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(16),
+                            border: Border.all(color: Colors.grey.shade200),
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.03),
+                                blurRadius: 8,
+                                offset: const Offset(0, 2),
+                              ),
+                            ],
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                category['emoji']!,
+                                style: const TextStyle(fontSize: 48),
+                              ),
+                              const SizedBox(height: 8),
+                              Text(
+                                category['label']!,
+                                style: const TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              if (count > 0) ...[
+                                const SizedBox(height: 4),
+                                Text(
+                                  '$count restaurants',
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey.shade600,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
+                        ),
                       );
                     },
                     childCount: categories.length,

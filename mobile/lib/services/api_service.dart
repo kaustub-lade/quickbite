@@ -105,6 +105,60 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getPopularRestaurants() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/restaurants/popular'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data['restaurants'] ?? [];
+      } else {
+        throw Exception('Failed to load popular restaurants: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch popular restaurants: $e');
+    }
+  }
+
+  Future<List<dynamic>> getTrendingItems() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/menu/trending'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data['items'] ?? [];
+      } else {
+        throw Exception('Failed to load trending items: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch trending items: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> getRestaurantStats() async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/restaurants/stats'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data['stats'] ?? {};
+      } else {
+        throw Exception('Failed to load stats: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch stats: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> login(String email, String password) async {
     try {
       final response = await http.post(
