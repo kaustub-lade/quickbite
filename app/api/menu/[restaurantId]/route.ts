@@ -4,12 +4,12 @@ import MenuItem from '@/lib/models/MenuItem'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { restaurantId: string } }
+  { params }: { params: Promise<{ restaurantId: string }> }
 ) {
   try {
     await connectDB()
 
-    const { restaurantId } = params
+    const { restaurantId } = await params
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
     const isVeg = searchParams.get('isVeg')
