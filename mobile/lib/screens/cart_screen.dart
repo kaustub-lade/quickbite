@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
+import '../providers/auth_provider.dart';
 import '../models/restaurant.dart';
+import 'checkout_screen.dart';
+import 'login_screen.dart';
 
 class CartScreen extends StatelessWidget {
   const CartScreen({super.key});
@@ -357,36 +360,44 @@ class CartScreen extends StatelessWidget {
   }
 
   void _showCheckoutDialog(BuildContext context, CartProvider cart) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Order Confirmation'),
-        content: const Text(
-          'This is a demo. In production, this would proceed to payment and address selection.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('CANCEL'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              cart.clear();
-              Navigator.pop(context);
-              Navigator.pop(context);
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Order placed successfully! (Demo)'),
-                  backgroundColor: Colors.green,
-                ),
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEA580C),
+    final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+    // Check if user is logged in
+    if (authProvider.user == null) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Login Required'),
+          content: const Text('Please login to place an order.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('CANCEL'),
             ),
-            child: const Text('PLACE ORDER'),
-          ),
-        ],
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(
+                    builder: (context) => const LoginScreen(),
+                  ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFFEA580C),
+              ),
+              child: const Text('LOGIN'),
+            ),
+          ],
+        ),
+      );
+      return;
+    }
+
+    // Navigate to checkout screen
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const CheckoutScreen(),
       ),
     );
   }

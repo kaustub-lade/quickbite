@@ -128,4 +128,59 @@ class ApiService {
       throw Exception('Failed to fetch profile: $e');
     }
   }
+
+  // Order APIs
+  Future<Map<String, dynamic>> placeOrder(Map<String, dynamic> orderData) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/orders'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode(orderData),
+      ).timeout(const Duration(seconds: 15));
+
+      if (response.statusCode == 201) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to place order: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to place order: $e');
+    }
+  }
+
+  Future<List<dynamic>> getUserOrders(String userId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/orders?userId=$userId'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['orders'] as List;
+      } else {
+        throw Exception('Failed to fetch orders: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch orders: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> getOrderDetails(String orderId) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/orders/$orderId'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['order'];
+      } else {
+        throw Exception('Failed to fetch order: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch order: $e');
+    }
+  }
 }
