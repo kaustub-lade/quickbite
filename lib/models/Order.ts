@@ -33,6 +33,18 @@ export interface IOrder extends mongoose.Document {
   };
   paymentFailureReason?: string;
   specialInstructions?: string;
+  // Commission tracking
+  commission: {
+    rate: number; // Percentage (10-15%)
+    amount: number; // Calculated commission amount
+    status: 'pending' | 'paid' | 'refunded';
+    paidAt?: Date;
+  };
+  restaurantPayout: {
+    amount: number; // totalAmount - commission.amount
+    status: 'pending' | 'paid' | 'refunded';
+    paidAt?: Date;
+  };
   createdAt: Date;
   updatedAt: Date;
 }
@@ -95,7 +107,27 @@ const orderSchema = new mongoose.Schema({
     razorpaySignature: { type: String }
   },
   paymentFailureReason: { type: String },
-  specialInstructions: { type: String }
+  specialInstructions: { type: String },
+  // Commission tracking
+  commission: {
+    rate: { type: Number, required: true, default: 12 }, // 12% default
+    amount: { type: Number, required: true, default: 0 },
+    status: { 
+      type: String, 
+      enum: ['pending', 'paid', 'refunded'],
+      default: 'pending'
+    },
+    paidAt: { type: Date }
+  },
+  restaurantPayout: {
+    amount: { type: Number, required: true, default: 0 },
+    status: { 
+      type: String, 
+      enum: ['pending', 'paid', 'refunded'],
+      default: 'pending'
+    },
+    paidAt: { type: Date }
+  }
 }, {
   timestamps: true
 });
@@ -103,5 +135,27 @@ const orderSchema = new mongoose.Schema({
 // Index for efficient queries
 orderSchema.index({ userId: 1, createdAt: -1 });
 orderSchema.index({ restaurantId: 1, createdAt: -1 });
+
+// Calculate commission and restaurant payout before saving
+orderSchema.pre('save', function() {
+  if (this.isNew || this.isModified('totalAmount') || this.isModified('commission.rate')) {
+    const commissionRate = this.commission?.rate || 12; // Default 12%
+    const commissionAmount = (this.totalAmount * commissionRate) / 100;
+    const restaurantPayoutAmount = this.totalAmount - commissionAmount;
+
+    this.commission = {
+      rate: commissionRate,
+      amount: Math.round(commissionAmount * 100) / 100, // Round to 2 decimals
+      status: this.commission?.status || 'pending',
+      paidAt: this.commission?.paidAt
+    };
+
+    this.restaurantPayout = {
+      amount: Math.round(restaurantPayoutAmount * 100) / 100, // Round to 2 decimals
+      status: this.restaurantPayout?.status || 'pending',
+      paidAt: this.restaurantPayout?.paidAt
+    };
+  }
+});
 
 export const Order = mongoose.models.Order || mongoose.model<IOrder>('Order', orderSchema);

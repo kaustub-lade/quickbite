@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import connectToDatabase from '@/lib/mongodb';
 import { Order } from '@/lib/models/Order';
+import { OrderTracking } from '@/lib/models/OrderTracking';
 import User from '@/lib/models/User';
 import Restaurant from '@/lib/models/Restaurant';
 
@@ -74,6 +75,26 @@ export async function POST(req: NextRequest) {
 
     await order.save();
 
+    // Create order tracking automatically
+    const estimatedDeliveryTime = new Date();
+    estimatedDeliveryTime.setMinutes(estimatedDeliveryTime.getMinutes() + 40);
+
+    await OrderTracking.create({
+      orderId: order._id,
+      userId,
+      restaurantId,
+      status: 'pending',
+      statusHistory: [{
+        status: 'pending',
+        timestamp: new Date(),
+        note: 'Order placed successfully'
+      }],
+      estimatedDeliveryTime
+    }).catch(err => {
+      console.error('Failed to create tracking:', err);
+      // Don't fail the order if tracking creation fails
+    });
+
     return NextResponse.json({
       success: true,
       order: {
@@ -81,6 +102,8 @@ export async function POST(req: NextRequest) {
         orderNumber: order._id.toString().slice(-8).toUpperCase(),
         restaurantName: order.restaurantName,
         totalAmount: order.totalAmount,
+        commission: order.commission,
+        restaurantPayout: order.restaurantPayout,
         status: order.status,
         createdAt: order.createdAt
       },

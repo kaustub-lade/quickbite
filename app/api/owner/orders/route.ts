@@ -1,6 +1,7 @@
 import { NextRequest } from 'next/server'
 import connectDB from '@/lib/mongodb'
 import { Order } from '@/lib/models/Order'
+import { OrderTracking } from '@/lib/models/OrderTracking'
 import { authenticateUser } from '@/lib/middleware/auth'
 
 export async function GET(req: NextRequest) {
@@ -135,6 +136,28 @@ export async function PATCH(req: NextRequest) {
         { success: false, error: 'Order not found' },
         { status: 404 }
       )
+    }
+
+    // Update order tracking in real-time
+    const tracking = await OrderTracking.findOne({ orderId });
+    if (tracking) {
+      tracking.status = status as any;
+      
+      // Add delivery person info when out for delivery
+      if (status === 'out_for_delivery' && !tracking.deliveryPerson) {
+        tracking.deliveryPerson = {
+          name: 'Delivery Partner',
+          phone: '+91-XXXXXXXXXX'
+        };
+        
+        // Update ETA
+        const now = new Date();
+        tracking.estimatedDeliveryTime = new Date(now.getTime() + 20 * 60000); // 20 mins from now
+      }
+      
+      await tracking.save().catch((err: any) => {
+        console.error('Failed to update tracking:', err);
+      });
     }
 
     return Response.json({
