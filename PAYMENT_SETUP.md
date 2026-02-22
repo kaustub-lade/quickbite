@@ -14,10 +14,24 @@ QuickBite now supports online payments through Razorpay integration. This guide 
 
 ### 1. Get Razorpay API Keys
 
-1. Sign up at [Razorpay](https://razorpay.com/)
-2. Navigate to **Settings → API Keys**
-3. Generate **Test Mode** keys
-4. Copy the `Key ID` and `Key Secret`
+1. **Sign up at [Razorpay](https://razorpay.com/)**
+2. **Activate Test Mode:**
+   - After login, toggle to **Test Mode** in the dashboard
+   - Top-right corner will show "Test Mode" badge
+   - Test mode uses separate database and won't affect live transactions
+   
+3. **Generate API Keys:**
+   - Navigate to **Settings → API Keys**
+   - Click **Generate Test Key** (for development)
+   - **Key ID** starts with `rzp_test_`
+   - **Key Secret** is shown only once - copy it securely
+   
+4. **Important:**
+   - Test keys are for development/testing only
+   - Payments in test mode don't involve real money
+   - Use test cards for transactions (see Test Card Details section)
+
+**Test Mode Documentation:** https://razorpay.com/docs/x/dashboard/test-mode/
 
 ### 2. Configure Environment Variables
 
@@ -140,6 +154,21 @@ The server will now load Razorpay configuration from environment variables.
    - Navigate to success screen
 
 ## Testing
+
+### Understanding Test Mode
+
+Razorpay Test Mode provides a complete simulation environment:
+
+✅ **Separate Database:** Test transactions don't mix with live data
+✅ **No Real Money:** All payments are simulated
+✅ **Full Feature Access:** Test all payment methods (cards, UPI, wallets, netbanking)
+✅ **Webhook Testing:** Receive test webhooks for payment events
+✅ **Dashboard Analytics:** View test payments in dashboard
+
+**Switch Between Modes:**
+- Use toggle in top-right of Razorpay dashboard
+- Test keys only work in test mode
+- Live keys only work in live mode
 
 ### Test Online Payment
 

@@ -96,18 +96,15 @@ function verifyRazorpaySignature(
   signature: string
 ): boolean {
   try {
-    // For demo purposes, we'll accept any signature that's not empty
-    // In production, verify using actual Razorpay logic:
-    /*
+    // Verify signature using Razorpay's algorithm
+    // https://razorpay.com/docs/payments/server-integration/nodejs/payment-gateway/build-integration#step-4-verify-the-payment-signature
     const text = `${orderId}|${paymentId}`;
     const generatedSignature = crypto
       .createHmac('sha256', razorpayConfig.keySecret)
       .update(text)
       .digest('hex');
-    return generatedSignature === signature;
-    */
     
-    return signature.length > 0; // Demo mode - accept any non-empty signature
+    return generatedSignature === signature;
   } catch (error) {
     console.error('Error verifying signature:', error);
     return false;

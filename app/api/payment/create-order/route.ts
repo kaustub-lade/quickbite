@@ -1,14 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import Razorpay from 'razorpay';
 import connectToDatabase from '@/lib/mongodb';
 import { razorpayConfig } from '@/lib/razorpay';
-import crypto from 'crypto';
+import { authenticateUser } from '@/lib/middleware/auth';
 
 // POST /api/payment/create-order - Create Razorpay order
 export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
 
-    const { amount, currency = 'INR', orderId, receipt } = await req.json();
+    // Authenticate user
+    const authResult = await authenticateUser(req);
+    if (!authResult.user) {
+      return NextResponse.json(
+        { success: false, error: 'Authentication required' },
+        { status: 401 }
+      );
+    }
+
+    const { amount, currency = 'INR', orderId, receipt, notes } = await req.json();
 
     // Validate required fields
     if (!amount || amount <= 0) {
@@ -29,23 +39,19 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // In a real implementation, we would call Razorpay API here
-    // For demo purposes, we'll return a mock order
-    const razorpayOrderId = `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    // Initialize Razorpay
+    const razorpay = new Razorpay({
+      key_id: razorpayConfig.keyId,
+      key_secret: razorpayConfig.keySecret,
+    });
 
-    // Mock Razorpay order response
-    const razorpayOrder = {
-      id: razorpayOrderId,
-      entity: 'order',
-      amount: amount * 100, // Razorpay expects amount in paise
-      amount_paid: 0,
-      amount_due: amount * 100,
+    // Create Razorpay order
+    const razorpayOrder = await razorpay.orders.create({
+      amount: Math.round(amount * 100), // Convert to paise (smallest currency unit)
       currency,
       receipt: receipt || orderId || `receipt_${Date.now()}`,
-      status: 'created',
-      attempts: 0,
-      created_at: Math.floor(Date.now() / 1000),
-    };
+      notes: notes || { orderId: orderId || '' },
+    });
 
     return NextResponse.json({
       success: true,
@@ -54,6 +60,15 @@ export async function POST(req: NextRequest) {
     });
   } catch (error: any) {
     console.error('Error creating Razorpay order:', error);
+    
+    // Handle specific Razorpay errors
+    if (error.statusCode === 400) {
+      return NextResponse.json(
+        { success: false, error: 'Invalid payment details' },
+        { status: 400 }
+      );
+    }
+
     return NextResponse.json(
       {
         success: false,
