@@ -23,10 +23,7 @@ export async function GET(req: NextRequest) {
 
     const restaurantIds = [...new Set(menuItems.map((item: any) => item.restaurantId))];
     const restaurants = await Restaurant.find({
-      $or: [
-        { restaurantId: { $in: restaurantIds } },
-        { _id: { $in: restaurantIds } },
-      ],
+      restaurantId: { $in: restaurantIds },
     }).lean();
 
     const restaurantMap = new Map();
