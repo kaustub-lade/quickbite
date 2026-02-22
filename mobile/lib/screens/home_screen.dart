@@ -10,6 +10,7 @@ import '../providers/cart_provider.dart';
 import 'search_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
+import 'restaurant_detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -269,12 +270,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: popularRestaurants.length,
                     itemBuilder: (context, index) {
                       final restaurant = popularRestaurants[index];
-                      return Container(
-                        width: 280,
-                        margin: const EdgeInsets.only(right: 12),
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(12),
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            SlidePageRoute(
+                              page: RestaurantDetailScreen(
+                                restaurantId: restaurant['id'] ?? restaurant['_id'] ?? '',
+                                restaurantName: restaurant['name'] ?? 'Restaurant',
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: 280,
+                          margin: const EdgeInsets.only(right: 12),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(12),
                           boxShadow: [
                             BoxShadow(
                               color: Colors.black.withOpacity(0.05),
@@ -349,7 +362,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ],
                           ),
                         ),
-                      );
+                      ));
                     },
                   ),
                 ),
@@ -386,10 +399,24 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemCount: trendingItems.length,
                     itemBuilder: (context, index) {
                       final item = trendingItems[index];
-                      return Container(
-                        width: 200,
-                        margin: const EdgeInsets.only(right: 12),
-                        decoration: BoxDecoration(
+                      return GestureDetector(
+                        onTap: () {
+                          if (item['restaurant'] != null) {
+                            Navigator.push(
+                              context,
+                              SlidePageRoute(
+                                page: RestaurantDetailScreen(
+                                  restaurantId: item['restaurant']['id'] ?? item['restaurant']['_id'] ?? '',
+                                  restaurantName: item['restaurant']['name'] ?? 'Restaurant',
+                                ),
+                              ),
+                            );
+                          }
+                        },
+                        child: Container(
+                          width: 160,
+                          margin: const EdgeInsets.only(right: 12),
+                          decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(color: Colors.grey.shade200),
@@ -465,7 +492,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             ),
                           ],
                         ),
-                      );
+                      ));
                     },
                   ),
                 ),

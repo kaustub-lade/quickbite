@@ -37,8 +37,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    // Verify restaurant exists
-    const restaurant = await Restaurant.findById(restaurantId);
+    // Verify restaurant exists (handle both ObjectId and string ID)
+    const restaurant = await Restaurant.findOne({
+      $or: [
+        { _id: restaurantId },
+        { restaurantId: restaurantId }
+      ]
+    }).catch(() => null);
+    
     if (!restaurant) {
       return NextResponse.json(
         { error: 'Restaurant not found' },
