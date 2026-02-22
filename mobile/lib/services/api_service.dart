@@ -418,4 +418,90 @@ class ApiService {
       throw Exception('Failed to verify payment: $e');
     }
   }
+
+  // Get restaurants by platform
+  Future<List<dynamic>> getRestaurantsByPlatform({
+    required String platform,
+    int limit = 20,
+    String? cuisine,
+  }) async {
+    try {
+      var queryParams = 'platform=$platform&limit=$limit';
+      if (cuisine != null) {
+        queryParams += '&cuisine=$cuisine';
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/restaurants/by-platform?$queryParams'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['restaurants'] ?? [];
+      } else {
+        throw Exception('Failed to load restaurants: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get restaurants by platform: $e');
+    }
+  }
+
+  // Get autocomplete suggestions
+  Future<List<dynamic>> getAutocompleteSuggestions(String query, {int limit = 10}) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/search/autocomplete?q=$query&limit=$limit'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 5));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['suggestions'] ?? [];
+      } else {
+        throw Exception('Failed to load suggestions: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get autocomplete suggestions: $e');
+    }
+  }
+
+  // Advanced search with filters
+  Future<Map<String, dynamic>> advancedSearch({
+    String? query,
+    double? minRating,
+    int? maxPrice,
+    bool? isVeg,
+    String? platform,
+    String? cuisine,
+    int? maxDeliveryTime,
+    String sortBy = 'relevance',
+    int limit = 50,
+  }) async {
+    try {
+      var queryParams = 'limit=$limit&sortBy=$sortBy';
+      
+      if (query != null) queryParams += '&q=$query';
+      if (minRating != null) queryParams += '&minRating=$minRating';
+      if (maxPrice != null) queryParams += '&maxPrice=$maxPrice';
+      if (isVeg != null) queryParams += '&isVeg=$isVeg';
+      if (platform != null) queryParams += '&platform=$platform';
+      if (cuisine != null) queryParams += '&cuisine=$cuisine';
+      if (maxDeliveryTime != null) queryParams += '&maxDeliveryTime=$maxDeliveryTime';
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/search/advanced?$queryParams'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Search failed: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to perform advanced search: $e');
+    }
+  }
 }
+

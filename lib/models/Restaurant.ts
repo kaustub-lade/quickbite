@@ -8,6 +8,18 @@ export interface IRestaurant {
   location: string
   rating: number
   imageUrl?: string
+  deliveryTime?: string
+  distance?: number
+  openingHours?: string
+  platforms?: ('swiggy' | 'zomato' | 'ondc')[]
+  reviews?: Array<{
+    userId: string
+    userName: string
+    rating: number
+    comment: string
+    createdAt: Date
+  }>
+  totalReviews?: number
   createdAt?: Date
   updatedAt?: Date
 }
@@ -40,6 +52,39 @@ const restaurantSchema = new mongoose.Schema<IRestaurant>(
     },
     imageUrl: {
       type: String,
+    },
+    deliveryTime: {
+      type: String,
+      default: '30-40 mins',
+    },
+    distance: {
+      type: Number,
+      default: 2.5,
+    },
+    openingHours: {
+      type: String,
+      default: '9:00 AM - 11:00 PM',
+    },
+    platforms: {
+      type: [String],
+      enum: ['swiggy', 'zomato', 'ondc'],
+      default: ['swiggy', 'zomato'],
+    },
+    reviews: {
+      type: [
+        {
+          userId: String,
+          userName: String,
+          rating: Number,
+          comment: String,
+          createdAt: Date,
+        },
+      ],
+      default: [],
+    },
+    totalReviews: {
+      type: Number,
+      default: 0,
     },
   },
   {

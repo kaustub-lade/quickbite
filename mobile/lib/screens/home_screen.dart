@@ -8,6 +8,7 @@ import '../widgets/shimmer_loading.dart';
 import '../widgets/custom_page_route.dart';
 import '../providers/cart_provider.dart';
 import '../widgets/best_deal_card.dart';
+import '../widgets/platform_filter.dart';
 import 'search_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
@@ -22,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   String? selectedCategory;
+  String selectedPlatform = 'all';
   List<Recommendation> recommendations = [];
   List<dynamic> popularRestaurants = [];
   List<dynamic> trendingItems = [];
@@ -58,12 +60,16 @@ class _HomeScreenState extends State<HomeScreen> {
       final apiService = context.read<ApiService>();
       
       // Fetch all data in parallel
-      final results = await Future.wait([
-        apiService.getPopularRestaurants(),
+      List<Future<dynamic>> futures = [
+        selectedPlatform == 'all' 
+          ? apiService.getPopularRestaurants()
+          : apiService.getRestaurantsByPlatform(platform: selectedPlatform, limit: 10),
         apiService.getTrendingItems(),
         apiService.getRestaurantStats(),
         apiService.getBestDeals(limit: 15),
-      ]);
+      ];
+      
+      final results = await Future.wait(futures);
 
       setState(() {
         popularRestaurants = results[0] as List<dynamic>;
@@ -81,6 +87,13 @@ class _HomeScreenState extends State<HomeScreen> {
       });
       // Silently fail - show empty sections instead of errors
     }
+  }
+
+  void onPlatformChanged(String platform) {
+    setState(() {
+      selectedPlatform = platform;
+    });
+    loadHomeData();
   }
 
   int getCategoryCount(String category) {
@@ -270,6 +283,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ),
             ),
+
+            // Platform Filter
+            if (selectedCategory == null)
+              SliverToBoxAdapter(
+                child: PlatformFilterBar(
+                  selectedPlatform: selectedPlatform,
+                  onPlatformSelected: onPlatformChanged,
+                ),
+              ),
 
             // Best Deals Section
             if (selectedCategory == null && !isLoadingDeals && bestDeals.isNotEmpty) ...[
