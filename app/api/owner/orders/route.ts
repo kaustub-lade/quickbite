@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import connectDB from '@/lib/mongodb'
-import Order from '@/lib/models/Order'
+import { Order } from '@/lib/models/Order'
 import { authenticateUser } from '@/lib/middleware/auth'
 
 export async function GET(req: NextRequest) {
@@ -8,9 +8,9 @@ export async function GET(req: NextRequest) {
     await connectDB()
 
     // Authenticate user
-    const user = await authenticateUser(req)
-    if (!user) {
-      return Response.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    const { user, error } = await authenticateUser(req)
+    if (error || !user) {
+      return Response.json({ success: false, error: error || 'Unauthorized' }, { status: 401 })
     }
 
     // Check if user is restaurant owner or admin
@@ -91,9 +91,9 @@ export async function PATCH(req: NextRequest) {
     await connectDB()
 
     // Authenticate user
-    const user = await authenticateUser(req)
-    if (!user) {
-      return Response.json({ success: false, error: 'Unauthorized' }, { status: 401 })
+    const { user, error } = await authenticateUser(req)
+    if (error || !user) {
+      return Response.json({ success: false, error: error || 'Unauthorized' }, { status: 401 })
     }
 
     // Check if user is restaurant owner or admin

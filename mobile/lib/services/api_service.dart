@@ -503,5 +503,145 @@ class ApiService {
       throw Exception('Failed to perform advanced search: $e');
     }
   }
+
+  // Admin Analytics - Get order trends
+  Future<Map<String, dynamic>> getOrderTrends({
+    int days = 30,
+    String groupBy = 'day',
+    String? token,
+  }) async {
+    try {
+      final headers = <String, String>{
+        'Content-Type': 'application/json',
+      };
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/admin/analytics/order-trends?days=$days&groupBy=$groupBy'),
+        headers: headers,
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load order trends: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get order trends: $e');
+    }
+  }
+
+  // Admin Analytics - Get popular items
+  Future<Map<String, dynamic>> getPopularItems({
+    int limit = 20,
+    int days = 30,
+    String? token,
+  }) async {
+    try {
+      final headers = <String, String>{
+        'Content-Type': 'application/json',
+      };
+      if (token != null) {
+        headers['Authorization'] = 'Bearer $token';
+      }
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/admin/analytics/popular-items?limit=$limit&days=$days'),
+        headers: headers,
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load popular items: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get popular items: $e');
+    }
+  }
+
+  // Restaurant Owner - Get owned restaurants
+  Future<List<dynamic>> getOwnerRestaurants(String token) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/owner/restaurants'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        return data['restaurants'] ?? [];
+      } else {
+        throw Exception('Failed to load restaurants: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get owner restaurants: $e');
+    }
+  }
+
+  // Restaurant Owner - Get orders for restaurant
+  Future<Map<String, dynamic>> getOwnerOrders({
+    required String token,
+    String? restaurantId,
+    String? status,
+    int page = 1,
+    int limit = 50,
+  }) async {
+    try {
+      var queryParams = 'page=$page&limit=$limit';
+      if (restaurantId != null) queryParams += '&restaurantId=$restaurantId';
+      if (status != null) queryParams += '&status=$status';
+
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/owner/orders?$queryParams'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load orders: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get owner orders: $e');
+    }
+  }
+
+  // Restaurant Owner - Update order status
+  Future<Map<String, dynamic>> updateOrderStatus({
+    required String token,
+    required String orderId,
+    required String status,
+  }) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$baseUrl/api/owner/orders'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'orderId': orderId,
+          'status': status,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to update order status: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to update order status: $e');
+    }
+  }
 }
 

@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import connectDB from '@/lib/mongodb'
-import Order from '@/lib/models/Order'
+import { Order } from '@/lib/models/Order'
 import MenuItem from '@/lib/models/MenuItem'
 
 export async function GET(req: NextRequest) {
@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     ])
 
     // Get full menu item details for top items
-    const itemIds = popularItems.map(item => item._id)
+    const itemIds = popularItems.map((item: any) => item._id)
     const menuItems = await MenuItem.find({ _id: { $in: itemIds } })
       .select('name description price imageUrl category isVeg')
       .lean()

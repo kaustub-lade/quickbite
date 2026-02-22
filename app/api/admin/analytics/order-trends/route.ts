@@ -1,6 +1,6 @@
 import { NextRequest } from 'next/server'
 import connectDB from '@/lib/mongodb'
-import Order from '@/lib/models/Order'
+import { Order } from '@/lib/models/Order'
 
 export async function GET(req: NextRequest) {
   try {
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
 
     // Calculate totals
     const totals = orderTrends.reduce(
-      (acc, day) => ({
+      (acc: any, day: any) => ({
         totalOrders: acc.totalOrders + day.totalOrders,
         totalRevenue: acc.totalRevenue + day.totalRevenue,
         completedOrders: acc.completedOrders + day.completedOrders,

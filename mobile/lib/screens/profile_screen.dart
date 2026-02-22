@@ -5,6 +5,8 @@ import '../providers/cart_provider.dart';
 import 'login_screen.dart';
 import 'order_history_screen.dart';
 import 'saved_addresses_screen.dart';
+import 'admin_dashboard_screen.dart';
+import 'owner_portal_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -288,6 +290,41 @@ class ProfileScreen extends StatelessWidget {
               },
             ),
           ]),
+
+          const SizedBox(height: 16),
+
+          // Management Section (Admin/Owner)
+          if (user.isAdmin || user.isRestaurantOwner)
+            _buildSection(context, 'Management', [
+              if (user.isAdmin)
+                _buildActionTile(
+                  icon: Icons.dashboard,
+                  title: 'Admin Dashboard',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => AdminDashboardScreen(
+                          token: authProvider.token ?? '',
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              if (user.isRestaurantOwner)
+                _buildActionTile(
+                  icon: Icons.store,
+                  title: 'Restaurant Owner Portal',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => OwnerPortalScreen(
+                          token: authProvider.token ?? '',
+                        ),
+                      ),
+                    );
+                  },
+                ),
+            ]),
 
           const SizedBox(height: 24),
 
