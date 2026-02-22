@@ -22,7 +22,10 @@ class RestaurantDetailScreen extends StatefulWidget {
     required this.rating,
     required this.deliveryTime,
     required this.location,
- });
+    this.highlightItemId,
+  });
+
+  final String? highlightItemId;
 
   @override
   State<RestaurantDetailScreen> createState() => _RestaurantDetailScreenState();

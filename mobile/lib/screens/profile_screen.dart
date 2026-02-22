@@ -7,6 +7,7 @@ import 'order_history_screen.dart';
 import 'saved_addresses_screen.dart';
 import 'admin_dashboard_screen.dart';
 import 'owner_portal_screen.dart';
+import 'favorites_screen.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -208,8 +209,8 @@ class ProfileScreen extends StatelessWidget {
 
           const SizedBox(height: 16),
 
-          // Orders Section
-          _buildSection(context, 'Orders', [
+          // Orders & Favorites Section
+          _buildSection(context, 'Orders & Favorites', [
             _buildActionTile(
               icon: Icons.receipt_long,
               title: 'My Orders',
@@ -217,6 +218,17 @@ class ProfileScreen extends StatelessWidget {
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const OrderHistoryScreen(),
+                  ),
+                );
+              },
+            ),
+            _buildActionTile(
+              icon: Icons.favorite,
+              title: 'Favorites',
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const FavoritesScreen(),
                   ),
                 );
               },

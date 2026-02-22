@@ -643,5 +643,111 @@ class ApiService {
       throw Exception('Failed to update order status: $e');
     }
   }
+
+  // Favorites - Get user's favorites
+  Future<Map<String, dynamic>> getFavorites({
+    required String token,
+    String? type, // 'restaurant' or 'dish' or null for all
+  }) async {
+    try {
+      var uri = Uri.parse('$baseUrl/api/favorites');
+      if (type != null) {
+        uri = Uri.parse('$baseUrl/api/favorites?type=$type');
+      }
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to load favorites: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to get favorites: $e');
+    }
+  }
+
+  // Favorites - Add to favorites
+  Future<Map<String, dynamic>> addFavorite({
+    required String token,
+    required String itemType, // 'restaurant' or 'dish'
+    required String itemId,
+    required String itemName,
+    String? itemImage,
+    String? restaurantId, // Required for dishes
+    String? restaurantName,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/favorites'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'itemType': itemType,
+          'itemId': itemId,
+          'itemName': itemName,
+          'itemImage': itemImage,
+          'restaurantId': restaurantId,
+          'restaurantName': restaurantName,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 201 || response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 409) {
+        // Already favorited
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to add favorite: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to add favorite: $e');
+    }
+  }
+
+  // Favorites - Remove from favorites
+  Future<Map<String, dynamic>> removeFavorite({
+    required String token,
+    String? favoriteId,
+    String? itemType,
+    String? itemId,
+  }) async {
+    try {
+      String queryParams = '';
+      if (favoriteId != null) {
+        queryParams = 'id=$favoriteId';
+      } else if (itemType != null && itemId != null) {
+        queryParams = 'itemType=$itemType&itemId=$itemId';
+      } else {
+        throw Exception('Provide either favoriteId or both itemType and itemId');
+      }
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl/api/favorites?$queryParams'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else if (response.statusCode == 404) {
+        return {'success': false, 'error': 'Favorite not found'};
+      } else {
+        throw Exception('Failed to remove favorite: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to remove favorite: $e');
+    }
+  }
 }
 
