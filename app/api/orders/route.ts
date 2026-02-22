@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { connectToDatabase } from '@/lib/mongodb';
+import connectToDatabase from '@/lib/mongodb';
 import { Order } from '@/lib/models/Order';
-import { User } from '@/lib/models/User';
-import { Restaurant } from '@/lib/models/Restaurant';
+import User from '@/lib/models/User';
+import Restaurant from '@/lib/models/Restaurant';
 
 // POST /api/orders - Create new order
 export async function POST(req: NextRequest) {
