@@ -14,7 +14,21 @@ export interface IOrder extends mongoose.Document {
   restaurantId: mongoose.Types.ObjectId;
   restaurantName: string;
   items: IOrderItem[];
-  totalAmount: number;
+  subtotal: number; // Before discounts
+  totalAmount: number; // After discounts
+  deliveryFee: number;
+  // Coupon and gift card
+  coupon?: {
+    code: string;
+    couponId: string;
+    discountAmount: number;
+    deliveryDiscount: number;
+  };
+  giftCard?: {
+    code: string;
+    giftCardId: string;
+    amountUsed: number;
+  };
   deliveryAddress: {
     fullAddress: string;
     landmark?: string;
@@ -73,7 +87,21 @@ const orderSchema = new mongoose.Schema({
   },
   restaurantName: { type: String, required: true },
   items: [orderItemSchema],
+  subtotal: { type: Number, required: true, min: 0 },
   totalAmount: { type: Number, required: true, min: 0 },
+  deliveryFee: { type: Number, required: true, default: 0 },
+  // Coupon and gift card
+  coupon: {
+    code: { type: String, uppercase: true },
+    couponId: { type: String },
+    discountAmount: { type: Number, default: 0 },
+    deliveryDiscount: { type: Number, default: 0 }
+  },
+  giftCard: {
+    code: { type: String, uppercase: true },
+    giftCardId: { type: String },
+    amountUsed: { type: Number, default: 0 }
+  },
   deliveryAddress: {
     fullAddress: { type: String, required: true },
     landmark: { type: String },

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
+import '../services/google_sign_in_service.dart';
+import '../services/api_service.dart';
 import 'signup_screen.dart';
 import 'home_screen.dart';
 
@@ -56,6 +58,78 @@ class _LoginScreenState extends State<LoginScreen> {
             backgroundColor: Colors.red,
           ),
         );
+      }
+    }
+  }
+
+  Future<void> _handleGoogleSignIn() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final googleAccount = await GoogleSignInService.signIn();
+      
+      if (googleAccount == null) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Google sign-in cancelled'),
+              backgroundColor: Colors.orange,
+            ),
+          );
+        }
+        return;
+      }
+
+      // Get API service
+      final apiService = Provider.of<ApiService>(context, listen: false);
+      final authProvider = Provider.of<AuthProvider>(context, listen: false);
+
+      // Call backend API
+      final response = await apiService.googleSignIn(
+        googleId: googleAccount.id,
+        email: googleAccount.email,
+        name: googleAccount.displayName ?? googleAccount.email.split('@')[0],
+        photoUrl: googleAccount.photoUrl,
+      );
+
+      if (response['success'] == true) {
+        // Update auth provider
+        await authProvider.setUser(
+          response['user'],
+          response['token'],
+        );
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Google sign-in successful!'),
+              backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()),
+          );
+        }
+      } else {
+        throw Exception(response['error'] ?? 'Google sign-in failed');
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Google sign-in failed: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
       }
     }
   }
@@ -198,16 +272,18 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   
-                  const SizedBox(height: 12),
-                  
-                  // Forgot Password
-                  Align(
-                    alignment: Alignment.centerRight,
-                    child: TextButton(
-                      onPressed: () {
-                        // TODO: Implement forgot password
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(content: Text('Forgot password feature coming soon!')),
+                  const SizedBo_isLoading ? null : _handleGoogleSignIn,
+                    icon: const Text('🔍', style: TextStyle(fontSize: 20)),
+                    label: _isLoading
+                        ? const SizedBox(
+                            width: 20,
+                            height: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2),
+                          )
+                        : const Text(
+                            'Continue with Google',
+                            style: TextStyle(color: Colors.black87),
+                                const SnackBar(content: Text('Forgot password feature coming soon!')),
                         );
                       },
                       child: const Text(

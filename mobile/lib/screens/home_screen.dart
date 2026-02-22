@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../services/api_service.dart';
+import '../services/location_service.dart';
+import '../providers/auth_provider.dart';
 import '../models/recommendation.dart';
 import '../widgets/category_card.dart';
 import '../widgets/recommendation_card.dart';
@@ -46,6 +48,50 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     loadHomeData();
+    _requestLocationPermission();
+  }
+
+  Future<void> _requestLocationPermission() async {
+    try {
+      // Check if permission is already granted
+      final isGranted = await LocationService.isPermissionGranted();
+      if (isGranted) {
+        _updateUserLocation();
+        return;
+      }
+
+      // Request permission
+      final hasPermission = await LocationService.requestPermission();
+      if (hasPermission) {
+        _updateUserLocation();
+      }
+    } catch (e) {
+      // Silently fail - location is optional
+      print('Location permission error: $e');
+    }
+  }
+
+  Future<void> _updateUserLocation() async {
+    try {
+      final authProvider = context.read<AuthProvider>();
+      if (authProvider.token == null) {
+        return; // Not logged in, skip location update
+      }
+
+      final position = await LocationService.getCurrentLocationWithTimeout();
+      if (position != null) {
+        final apiService = context.read<ApiService>();
+        await apiService.updateUserLocation(
+          token: authProvider.token!,
+          latitude: position.latitude,
+          longitude: position.longitude,
+          address: '', // Can add reverse geocoding later
+        );
+      }
+    } catch (e) {
+      // Silently fail - location is optional
+      print('Location update error: $e');
+    }
   }
 
   Future<void> loadHomeData() async {

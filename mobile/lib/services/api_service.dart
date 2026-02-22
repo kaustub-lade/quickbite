@@ -847,5 +847,135 @@ class ApiService {
       throw Exception('Failed to fetch order tracking: $e');
     }
   }
+
+  // Google Sign-In API
+  Future<Map<String, dynamic>> googleSignIn({
+    required String googleId,
+    required String email,
+    required String name,
+    String? photoUrl,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/auth/google'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({
+          'googleId': googleId,
+          'email': email,
+          'name': name,
+          'photoUrl': photoUrl,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      return json.decode(response.body);
+    } catch (e) {
+      throw Exception('Google sign-in failed: $e');
+    }
+  }
+
+  // Coupon APIs
+  Future<Map<String, dynamic>> validateCoupon({
+    required String token,
+    required String code,
+    required double orderAmount,
+    String? restaurantId,
+    List<Map<String, dynamic>>? items,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/coupons/validate'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'code': code,
+          'orderAmount': orderAmount,
+          'restaurantId': restaurantId,
+          'items': items,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      return json.decode(response.body);
+    } catch (e) {
+      throw Exception('Failed to validate coupon: $e');
+    }
+  }
+
+  // Gift Card APIs
+  Future<Map<String, dynamic>> checkGiftCard({
+    required String token,
+    required String code,
+  }) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/gift-cards/check'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'code': code,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      return json.decode(response.body);
+    } catch (e) {
+      throw Exception('Failed to check gift card: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> redeemGiftCard({
+    required String token,
+    required String code,
+    required double amount,
+    required String orderId,
+  }) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$baseUrl/api/gift-cards/check'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'code': code,
+          'amount': amount,
+          'orderId': orderId,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      return json.decode(response.body);
+    } catch (e) {
+      throw Exception('Failed to redeem gift card: $e');
+    }
+  }
+
+  // Location update API
+  Future<Map<String, dynamic>> updateUserLocation({
+    required String token,
+    required double latitude,
+    required double longitude,
+    String? address,
+  }) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$baseUrl/api/auth/location'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'latitude': latitude,
+          'longitude': longitude,
+          'address': address,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      return json.decode(response.body);
+    } catch (e) {
+      throw Exception('Failed to update location: $e');
+    }
+  }
 }
 

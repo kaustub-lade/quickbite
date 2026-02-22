@@ -9,6 +9,14 @@ export interface IUser {
   role: 'customer' | 'admin' | 'restaurant_owner'
   restaurantId?: string
   isEmailVerified: boolean
+  googleId?: string
+  profilePicture?: string
+  location?: {
+    latitude: number
+    longitude: number
+    address?: string
+    lastUpdated?: Date
+  }
   createdAt?: Date
   updatedAt?: Date
 }
@@ -30,13 +38,12 @@ const userSchema = new mongoose.Schema<IUser>(
     },
     phone: {
       type: String,
-      required: true,
-      unique: true,
+      required: false, // Optional for Google sign-in users
       trim: true,
     },
     password: {
       type: String,
-      required: true,
+      required: false, // Optional for Google sign-in users
       minlength: 6,
     },
     role: {
@@ -51,6 +58,20 @@ const userSchema = new mongoose.Schema<IUser>(
     isEmailVerified: {
       type: Boolean,
       default: false,
+    },
+    googleId: {
+      type: String,
+      unique: true,
+      sparse: true, // Allows null values with unique constraint
+    },
+    profilePicture: {
+      type: String,
+    },
+    location: {
+      latitude: Number,
+      longitude: Number,
+      address: String,
+      lastUpdated: Date,
     },
   },
   {

@@ -3,11 +3,138 @@ import 'package:provider/provider.dart';
 import '../providers/cart_provider.dart';
 import '../providers/auth_provider.dart';
 import '../models/restaurant.dart';
+import '../services/api_service.dart';
+import '../widgets/coupon_giftcard_widget.dart';
 import 'checkout_screen.dart';
 import 'login_screen.dart';
 
-class CartScreen extends StatelessWidget {
+class CartScreen extends StatefulWidget {
   const CartScreen({super.key});
+
+  @override
+  State<CartScreen> createState() => _CartScreenState();
+}
+
+class _CartScreenState extends State<CartScreen> {
+  Map<String, dynamic>? _appliedCoupon;
+  Map<String, dynamic>? _appliedGiftCard;
+  bool _isProcessing = false;
+
+  Future<void> _handleApply(String code, String type) async {
+    setState(() {
+      _isProcessing = true;
+    });
+
+    try {
+      final cart = context.read<CartProvider>();
+      final authProvider = context.read<AuthProvider>();
+      final apiService = context.read<ApiService>();
+
+      if (authProvider.token == null) {
+        _showSnackBar('Please login to apply $type', Colors.red);
+        return;
+      }
+
+      if (type == 'coupon') {
+        final response = await apiService.validateCoupon(
+          token: authProvider.token!,
+          code: code,
+          orderAmount: cart.totalAmount,
+          restaurantId: cart.restaurantId ?? '',
+          items: cart.items.map((item) => {
+            'id': item.id,
+            'name': item.name,
+            'category': item.category ?? '',
+            'price': item.price,
+            'quantity': item.quantity,
+          }).toList(),
+        );
+
+        if (response['success'] == true) {
+          setState(() {
+            _appliedCoupon = response['coupon'];
+          });
+          _showSnackBar('Coupon applied successfully!', Colors.green);
+        } else {
+          _showSnackBar(response['error'] ?? 'Invalid coupon', Colors.red);
+        }
+      } else if (type == 'giftcard') {
+        final response = await apiService.checkGiftCard(
+          token: authProvider.token!,
+          code: code,
+        );
+
+        if (response['success'] == true) {
+          final giftCard = response['giftCard'];
+          final balance = giftCard['balance'] as num;
+          final amountToUse = balance > cart.totalAmount
+              ? cart.totalAmount
+              : balance.toDouble();
+
+          setState(() {
+            _appliedGiftCard = {
+              ...giftCard,
+              'amountUsed': amountToUse,
+            };
+          });
+          _showSnackBar('Gift card applied successfully!', Colors.green);
+        } else {
+          _showSnackBar(response['error'] ?? 'Invalid gift card', Colors.red);
+        }
+      }
+    } catch (e) {
+      _showSnackBar('Error: $e', Colors.red);
+    } finally {
+      setState(() {
+        _isProcessing = false;
+      });
+    }
+  }
+
+  void _handleRemove(String type) {
+    setState(() {
+      if (type == 'coupon') {
+        _appliedCoupon = null;
+      } else if (type == 'giftcard') {
+        _appliedGiftCard = null;
+      }
+    });
+    _showSnackBar('${type == 'coupon' ? 'Coupon' : 'Gift card'} removed', Colors.grey);
+  }
+
+  void _showSnackBar(String message, Color color) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(message),
+        backgroundColor: color,
+        duration: const Duration(seconds: 2),
+      ),
+    );
+  }
+
+  double _calculateTotal(CartProvider cart) {
+    double total = cart.totalAmount;
+    
+    // Add fees
+    total += 40; // Delivery fee
+    total += 5;  // Platform fee
+    total += cart.totalAmount * 0.05; // GST
+
+    // Apply coupon discount
+    if (_appliedCoupon != null) {
+      final discountAmount = (_appliedCoupon!['discountAmount'] as num?)?.toDouble() ?? 0.0;
+      final deliveryDiscount = (_appliedCoupon!['deliveryDiscount'] as num?)?.toDouble() ?? 0.0;
+      total -= (discountAmount + deliveryDiscount);
+    }
+
+    // Apply gift card
+    if (_appliedGiftCard != null) {
+      final amountUsed = (_appliedGiftCard!['amountUsed'] as num?)?.toDouble() ?? 0.0;
+      total -= amountUsed;
+    }
+
+    return total > 0 ? total : 0;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,6 +227,16 @@ class CartScreen extends StatelessWidget {
 
                         const SizedBox(height: 12),
 
+                        // Coupons and Gift Cards
+                        CouponGiftCardWidget(
+                          onApply: _handleApply,
+                          onRemove: _handleRemove,
+                          appliedCoupon: _appliedCoupon,
+                          appliedGiftCard: _appliedGiftCard,
+                        ),
+
+                        const SizedBox(height: 12),
+
                         // Bill Details
                         Container(
                           color: Colors.white,
@@ -122,12 +259,42 @@ class CartScreen extends StatelessWidget {
                               _buildBillRow('Platform Fee', 5, color: Colors.grey.shade700),
                               const SizedBox(height: 8),
                               _buildBillRow('GST and Restaurant Charges', cart.totalAmount * 0.05, color: Colors.grey.shade700),
+                              
+                              // Show coupon discount
+                              if (_appliedCoupon != null) ...[
+                                const SizedBox(height: 8),
+                                _buildBillRow(
+                                  'Coupon Discount (${_appliedCoupon!['code']})',
+                                  -(_appliedCoupon!['discountAmount'] as num).toDouble(),
+                                  color: Colors.green,
+                                ),
+                                if ((_appliedCoupon!['deliveryDiscount'] as num?) != null && 
+                                    (_appliedCoupon!['deliveryDiscount'] as num) > 0) ...[
+                                  const SizedBox(height: 8),
+                                  _buildBillRow(
+                                    'Delivery Discount',
+                                    -(_appliedCoupon!['deliveryDiscount'] as num).toDouble(),
+                                    color: Colors.green,
+                                  ),
+                                ],
+                              ],
+                              
+                              // Show gift card discount
+                              if (_appliedGiftCard != null) ...[
+                                const SizedBox(height: 8),
+                                _buildBillRow(
+                                  'Gift Card Applied',
+                                  -(_appliedGiftCard!['amountUsed'] as num).toDouble(),
+                                  color: Colors.purple,
+                                ),
+                              ],
+                              
                               const SizedBox(height: 12),
                               Divider(color: Colors.grey.shade300),
                               const SizedBox(height: 12),
                               _buildBillRow(
                                 'TO PAY',
-                                cart.totalAmount + 40 + 5 + (cart.totalAmount * 0.05),
+                                _calculateTotal(cart),
                                 isBold: true,
                               ),
                             ],
