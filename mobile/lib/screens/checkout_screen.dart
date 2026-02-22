@@ -57,7 +57,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
       final apiService = Provider.of<ApiService>(context, listen: false);
 
       if (authProvider.user != null) {
-        final addresses = await apiService.getSavedAddresses(authProvider.user!['id']);
+        final addresses = await apiService.getSavedAddresses(authProvider.user!.id);
         
         if (addresses.isNotEmpty) {
           // Find default address or use first one
@@ -97,7 +97,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
     final selectedAddress = await Navigator.of(context).push<SavedAddress>(
       MaterialPageRoute(
         builder: (context) => SavedAddressesScreen(
-          userId: authProvider.user!['id'],
+          userId: authProvider.user!.id,
           selectMode: true,
           onAddressSelected: (address) {
             Navigator.of(context).pop(address);
@@ -161,25 +161,25 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
             }
           : {
               'fullAddress': _selectedAddress!.address,
-              'landmark': _selectedAddress!.landmark.isNotEmpty ? _selectedAddress!.landmark : null,
+              'landmark': _selectedAddress!.landmark != null && _selectedAddress!.landmark!.isNotEmpty ? _selectedAddress!.landmark : null,
               'city': _selectedAddress!.city,
               'pincode': _selectedAddress!.pincode,
               'phone': _selectedAddress!.phone,
             };
 
       final orderData = {
-        'userId': authProvider.user!['id'],
-        'restaurantId': cartProvider.restaurant!['id'],
-        'items': cartProvider.items.map((item) => {
-          'menuItemId': item.id,
-          'name': item.name,
-          'price': item.price,
+        'userId': authProvider.user!.id,
+        'restaurantId': cartProvider.restaurantId,
+        'items': cartProvider.items.values.map((item) => {
+          'menuItemId': item.menuItem.id,
+          'name': item.menuItem.name,
+          'price': item.menuItem.price,
           'quantity': item.quantity,
-          'isVeg': item.isVeg,
-          'platform': item.platform,
+          'isVeg': item.menuItem.isVeg,
+          'platform': (item.menuItem.bestDeal?['platform'] as String?) ?? 'swiggy',
         }).toList(),
         'deliveryAddress': deliveryAddress,
-        'platform': cartProvider.items[0].platform,
+        'platform': (cartProvider.items.values.first.menuItem.bestDeal?['platform'] as String?) ?? 'swiggy',
         'paymentMethod': _paymentMethod,
         'specialInstructions': _instructionsController.text.trim().isEmpty 
             ? null 
@@ -193,7 +193,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
         if (response['success'] == true) {
           // Order created, now process payment
           final orderId = response['order']['id'];
-          final totalAmount = cartProvider.totalPrice;
+          final totalAmount = cartProvider.totalAmount;
 
           // Show payment processing dialog
           if (!mounted) return;
@@ -320,19 +320,19 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      cartProvider.restaurant!['name'],
+                      cartProvider.restaurantName ?? 'Restaurant',
                       style: const TextStyle(
                         fontWeight: FontWeight.bold,
                         fontSize: 16,
                       ),
                     ),
                     const Divider(height: 24),
-                    ...cartProvider.items.map((item) => Padding(
+                    ...cartProvider.items.values.map((item) => Padding(
                       padding: const EdgeInsets.symmetric(vertical: 4),
                       child: Row(
                         children: [
                           Text('${item.quantity}x '),
-                          Expanded(child: Text(item.name)),
+                          Expanded(child: Text(item.menuItem.name)),
                           Text('₹${item.totalPrice.toStringAsFixed(0)}'),
                         ],
                       ),

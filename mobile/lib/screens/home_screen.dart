@@ -19,7 +19,8 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  String? selectedCategory  List<Recommendation> recommendations = [];
+  String? selectedCategory;
+  List<Recommendation> recommendations = [];
   List<dynamic> popularRestaurants = [];
   List<dynamic> trendingItems = [];
   Map<String, dynamic> restaurantStats = {};

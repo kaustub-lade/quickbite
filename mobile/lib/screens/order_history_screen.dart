@@ -38,7 +38,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
         throw Exception('Please login to view orders');
       }
 
-      final ordersData = await apiService.getUserOrders(authProvider.user!['id']);
+      final ordersData = await apiService.getUserOrders(authProvider.user!.id);
       
       setState(() {
         _orders = ordersData.map((data) => Order.fromJson(data)).toList();
