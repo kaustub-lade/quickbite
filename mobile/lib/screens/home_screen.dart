@@ -90,6 +90,29 @@ class _HomeScreenState extends State<HomeScreen> {
     return categoryCount[category] ?? 0;
   }
 
+  int _parseDeliveryTime(dynamic value) {
+    if (value == null) return 30;
+    if (value is int) return value;
+    if (value is String) {
+      // Extract first number from string like "30-40 mins" or "30 mins"
+      final match = RegExp(r'\d+').firstMatch(value);
+      if (match != null) {
+        return int.tryParse(match.group(0)!) ?? 30;
+      }
+    }
+    return 30;
+  }
+
+  double _parseRating(dynamic value) {
+    if (value == null) return 4.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      return double.tryParse(value) ?? 4.0;
+    }
+    return 4.0;
+  }
+
   Future<void> fetchRecommendations(String category) async {
     setState(() {
       isLoading = true;
@@ -328,8 +351,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 restaurantId: restaurant['id'] ?? restaurant['_id'] ?? '',
                                 restaurantName: restaurant['name'] ?? 'Restaurant',
                                 cuisine: restaurant['cuisine'] ?? 'Various',
-                                rating: (restaurant['rating'] ?? 4.0).toDouble(),
-                                deliveryTime: restaurant['deliveryTime'] ?? 30,
+                                rating: _parseRating(restaurant['rating']),
+                                deliveryTime: _parseDeliveryTime(restaurant['deliveryTime']),
                                 location: restaurant['location'] ?? 'Location',
                               ),
                             ),
@@ -462,8 +485,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                   restaurantId: item['restaurant']['id'] ?? item['restaurant']['_id'] ?? '',
                                   restaurantName: item['restaurant']['name'] ?? 'Restaurant',
                                   cuisine: item['restaurant']['cuisine'] ?? item['category'] ?? 'Various',
-                                  rating: (item['restaurant']['rating'] ?? 4.0).toDouble(),
-                                  deliveryTime: item['restaurant']['deliveryTime'] ?? 30,
+                                  rating: _parseRating(item['restaurant']['rating']),
+                                  deliveryTime: _parseDeliveryTime(item['restaurant']['deliveryTime']),
                                   location: item['restaurant']['location'] ?? 'Location',
                                 ),
                               ),

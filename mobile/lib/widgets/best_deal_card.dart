@@ -10,6 +10,28 @@ class BestDealCard extends StatelessWidget {
     required this.deal,
   });
 
+  static int _parseDeliveryTime(dynamic value) {
+    if (value == null) return 30;
+    if (value is int) return value;
+    if (value is String) {
+      final match = RegExp(r'\d+').firstMatch(value);
+      if (match != null) {
+        return int.tryParse(match.group(0)!) ?? 30;
+      }
+    }
+    return 30;
+  }
+
+  static double _parseRating(dynamic value) {
+    if (value == null) return 4.0;
+    if (value is double) return value;
+    if (value is int) return value.toDouble();
+    if (value is String) {
+      return double.tryParse(value) ?? 4.0;
+    }
+    return 4.0;
+  }
+
   @override
   Widget build(BuildContext context) {
     final savings = deal['savings'] ?? 0;
@@ -29,8 +51,8 @@ class BestDealCard extends StatelessWidget {
                 restaurantId: restaurant['id'],
                 restaurantName: restaurant['name'] ?? 'Restaurant',
                 cuisine: deal['category'] ?? 'Various',
-                rating: (restaurant['rating'] ?? 4.0).toDouble(),
-                deliveryTime: restaurant['deliveryTime'] ?? 30,
+                rating: _parseRating(restaurant['rating']),
+                deliveryTime: _parseDeliveryTime(restaurant['deliveryTime']),
                 location: restaurant['location'] ?? 'Location',
               ),
             ),
