@@ -7,6 +7,7 @@ import '../widgets/recommendation_card.dart';
 import '../widgets/shimmer_loading.dart';
 import '../widgets/custom_page_route.dart';
 import '../providers/cart_provider.dart';
+import '../widgets/best_deal_card.dart';
 import 'search_screen.dart';
 import 'cart_screen.dart';
 import 'profile_screen.dart';
@@ -24,10 +25,12 @@ class _HomeScreenState extends State<HomeScreen> {
   List<Recommendation> recommendations = [];
   List<dynamic> popularRestaurants = [];
   List<dynamic> trendingItems = [];
+  List<dynamic> bestDeals = [];
   Map<String, dynamic> restaurantStats = {};
   bool isLoading = false;
   bool isLoadingPopular = false;
   bool isLoadingTrending = false;
+  bool isLoadingDeals = false;
   String? error;
 
   final List<Map<String, String>> categories = [
@@ -44,10 +47,11 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   Future<void> loadHomeData() async {
-    // Load popular restaurants, trending items, and stats in parallel
+    // Load popular restaurants, trending items, stats, and best deals in parallel
     setState(() {
       isLoadingPopular = true;
       isLoadingTrending = true;
+      isLoadingDeals = true;
     });
 
     try {
@@ -58,14 +62,17 @@ class _HomeScreenState extends State<HomeScreen> {
         apiService.getPopularRestaurants(),
         apiService.getTrendingItems(),
         apiService.getRestaurantStats(),
+        apiService.getBestDeals(limit: 15),
       ]);
 
       setState(() {
         popularRestaurants = results[0] as List<dynamic>;
         trendingItems = results[1] as List<dynamic>;
         restaurantStats = results[2] as Map<String, dynamic>;
+        bestDeals = results[3] as List<dynamic>;
         isLoadingPopular = false;
         isLoadingTrending = false;
+        isLoadingDeals = false;
       });
     } catch (e) {
       setState(() {
@@ -241,6 +248,48 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ),
 
+            // Best Deals Section
+            if (selectedCategory == null && !isLoadingDeals && bestDeals.isNotEmpty) ...[
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+                  child: Row(
+                    children: [
+                      const Icon(Icons.local_offer, color: Color(0xFFEA580C), size: 24),
+                      const SizedBox(width: 8),
+                      const Text(
+                        '🔥 Best Deals',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 280,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    itemCount: bestDeals.length,
+                    itemBuilder: (context, index) {
+                      final deal = bestDeals[index];
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 12),
+                        child: BestDealCard(deal: deal),
+                      );
+                    },
+                  ),
+                ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(height: 24),
+              ),
+            ],
+
             // Popular Near You Section
             if (selectedCategory == null && !isLoadingPopular && popularRestaurants.isNotEmpty) ...[
               SliverToBoxAdapter(
@@ -278,6 +327,10 @@ class _HomeScreenState extends State<HomeScreen> {
                               page: RestaurantDetailScreen(
                                 restaurantId: restaurant['id'] ?? restaurant['_id'] ?? '',
                                 restaurantName: restaurant['name'] ?? 'Restaurant',
+                                cuisine: restaurant['cuisine'] ?? 'Various',
+                                rating: (restaurant['rating'] ?? 4.0).toDouble(),
+                                deliveryTime: restaurant['deliveryTime'] ?? 30,
+                                location: restaurant['location'] ?? 'Location',
                               ),
                             ),
                           );
@@ -408,6 +461,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                 page: RestaurantDetailScreen(
                                   restaurantId: item['restaurant']['id'] ?? item['restaurant']['_id'] ?? '',
                                   restaurantName: item['restaurant']['name'] ?? 'Restaurant',
+                                  cuisine: item['restaurant']['cuisine'] ?? item['category'] ?? 'Various',
+                                  rating: (item['restaurant']['rating'] ?? 4.0).toDouble(),
+                                  deliveryTime: item['restaurant']['deliveryTime'] ?? 30,
+                                  location: item['restaurant']['location'] ?? 'Location',
                                 ),
                               ),
                             );

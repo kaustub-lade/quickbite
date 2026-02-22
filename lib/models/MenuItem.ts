@@ -14,6 +14,11 @@ export interface IMenuItem {
   preparationTime?: number // in minutes
   spiceLevel?: 'mild' | 'medium' | 'hot'
   tags?: string[]
+  platformPrices?: Array<{
+    platform: 'swiggy' | 'zomato' | 'ondc'
+    price: number
+    savings: number
+  }>
   createdAt?: Date
   updatedAt?: Date
 }
@@ -70,6 +75,14 @@ const menuItemSchema = new mongoose.Schema<IMenuItem>(
     },
     tags: {
       type: [String],
+      default: [],
+    },
+    platformPrices: {
+      type: [{
+        platform: { type: String, enum: ['swiggy', 'zomato', 'ondc'] },
+        price: { type: Number },
+        savings: { type: Number, default: 0 }
+      }],
       default: [],
     },
   },

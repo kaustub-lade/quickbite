@@ -141,6 +141,24 @@ class ApiService {
     }
   }
 
+  Future<List<dynamic>> getBestDeals({int limit = 15}) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/menu/best-deals?limit=$limit'),
+        headers: {'Content-Type': 'application/json'},
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        final Map<String, dynamic> data = json.decode(response.body);
+        return data['deals'] ?? [];
+      } else {
+        throw Exception('Failed to load best deals: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch best deals: $e');
+    }
+  }
+
   Future<Map<String, dynamic>> getRestaurantStats() async {
     try {
       final response = await http.get(
