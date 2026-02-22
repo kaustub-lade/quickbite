@@ -5,6 +5,7 @@ import '../services/api_service.dart';
 import '../providers/auth_provider.dart';
 import '../models/order.dart';
 import 'order_detail_screen.dart';
+import 'order_tracking_screen.dart';
 
 class OrderHistoryScreen extends StatefulWidget {
   const OrderHistoryScreen({super.key});
@@ -240,7 +241,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
               Divider(color: Colors.grey.shade200, height: 1),
               const SizedBox(height: 12),
 
-              // Bottom row (status + total)
+              // Bottom row (status + actions)
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -248,6 +249,66 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                   Container(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 12,
+                      vertical: 6,
+                    ),
+                    decoration: BoxDecoration(
+                      color: statusColor.withOpacity(0.1),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(statusIcon, size: 14, color: statusColor),
+                        const SizedBox(width: 6),
+                        Text(
+                          order.getStatusDisplay(),
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w600,
+                            color: statusColor,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Total amount + Track button
+                  Row(
+                    children: [
+                      if (_canTrackOrder(order.status))
+                        TextButton.icon(
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => OrderTrackingScreen(orderId: order.id),
+                              ),
+                            );
+                          },
+                          icon: const Icon(Icons.location_on, size: 16),
+                          label: const Text('Track'),
+                          style: TextButton.styleFrom(
+                            foregroundColor: const Color(0xFFEA580C),
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                          ),
+                        ),
+                      const SizedBox(width: 8),
+                      Text(
+                        '₹${order.totalAmount.toStringAsFixed(0)}',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                        color: Colors.grey.shade400,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
                       vertical: 6,
                     ),
                     decoration: BoxDecoration(
@@ -334,5 +395,9 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
       default:
         return Icons.info_outline;
     }
+  }
+
+  bool _canTrackOrder(String status) {
+    return status != 'delivered' && status != 'cancelled';
   }
 }

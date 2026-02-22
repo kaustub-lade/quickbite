@@ -749,5 +749,103 @@ class ApiService {
       throw Exception('Failed to remove favorite: $e');
     }
   }
+
+  // Commission APIs - Admin only
+  Future<Map<String, dynamic>> getCommissionReports({
+    required String token,
+    DateTime? startDate,
+    DateTime? endDate,
+    String? restaurantId,
+    String? status,
+  }) async {
+    try {
+      // Build query parameters
+      final Map<String, String> queryParams = {};
+      if (startDate != null) {
+        queryParams['startDate'] = startDate.toIso8601String();
+      }
+      if (endDate != null) {
+        queryParams['endDate'] = endDate.toIso8601String();
+      }
+      if (restaurantId != null) {
+        queryParams['restaurantId'] = restaurantId;
+      }
+      if (status != null) {
+        queryParams['status'] = status;
+      }
+
+      final uri = Uri.parse('$baseUrl/api/admin/commission').replace(queryParameters: queryParams);
+
+      final response = await http.get(
+        uri,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to fetch commission reports: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch commission reports: $e');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateCommissionStatus({
+    required String token,
+    required String orderId,
+    required String type,
+    required String status,
+  }) async {
+    try {
+      final response = await http.patch(
+        Uri.parse('$baseUrl/api/admin/commission'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+        body: json.encode({
+          'orderId': orderId,
+          'type': type,
+          'status': status,
+        }),
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to update commission status: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to update commission status: $e');
+    }
+  }
+
+  // Order Tracking APIs
+  Future<Map<String, dynamic>> getOrderTracking({
+    required String token,
+    required String orderId,
+  }) async {
+    try {
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/orders/tracking?orderId=$orderId'),
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer $token',
+        },
+      ).timeout(const Duration(seconds: 10));
+
+      if (response.statusCode == 200) {
+        return json.decode(response.body);
+      } else {
+        throw Exception('Failed to fetch order tracking: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Failed to fetch order tracking: $e');
+    }
+  }
 }
 

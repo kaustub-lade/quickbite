@@ -6,6 +6,7 @@ import 'login_screen.dart';
 import 'order_history_screen.dart';
 import 'saved_addresses_screen.dart';
 import 'admin_dashboard_screen.dart';
+import 'admin_commission_screen.dart';
 import 'owner_portal_screen.dart';
 import 'favorites_screen.dart';
 
@@ -318,6 +319,18 @@ class ProfileScreen extends StatelessWidget {
                         builder: (context) => AdminDashboardScreen(
                           token: authProvider.token ?? '',
                         ),
+                      ),
+                    );
+                  },
+                ),
+              if (user.isAdmin)
+                _buildActionTile(
+                  icon: Icons.account_balance_wallet,
+                  title: 'Commission & Payouts',
+                  onTap: () {
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => const AdminCommissionScreen(),
                       ),
                     );
                   },
