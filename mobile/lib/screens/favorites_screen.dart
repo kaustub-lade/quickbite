@@ -46,9 +46,9 @@ class _FavoritesScreenState extends State<FavoritesScreen> with SingleTickerProv
         elevation: 0,
         bottom: TabBar(
           controller: _tabController,
-          labelColor: const Color(0xFFEA580C),
+          labelColor: const Color(0xFF99EDC3),
           unselectedLabelColor: Colors.grey,
-          indicatorColor: const Color(0xFFEA580C),
+          indicatorColor: const Color(0xFF99EDC3),
           tabs: const [
             Tab(text: 'Restaurants'),
             Tab(text: 'Dishes'),
@@ -218,7 +218,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with SingleTickerProv
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.favorite, color: Color(0xFFEA580C)),
+              icon: const Icon(Icons.favorite, color: Color(0xFF99EDC3)),
               onPressed: () async {
                 final confirmed = await _confirmRemove(context, favorite.itemName);
                 if (confirmed && authProvider.token != null) {
@@ -303,7 +303,7 @@ class _FavoritesScreenState extends State<FavoritesScreen> with SingleTickerProv
           mainAxisSize: MainAxisSize.min,
           children: [
             IconButton(
-              icon: const Icon(Icons.favorite, color: Color(0xFFEA580C)),
+              icon: const Icon(Icons.favorite, color: Color(0xFF99EDC3)),
               onPressed: () async {
                 final confirmed = await _confirmRemove(context, favorite.itemName);
                 if (confirmed && authProvider.token != null) {

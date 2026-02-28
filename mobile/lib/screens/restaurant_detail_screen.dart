@@ -175,7 +175,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
           SliverAppBar(
             expandedHeight: 200,
             pinned: true,
-            backgroundColor: const Color(0xFFEA580C),
+            backgroundColor: const Color(0xFF99EDC3),
             flexibleSpace: FlexibleSpaceBar(
               background: Stack(
                 fit: StackFit.expand,
@@ -186,7 +186,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                         begin: Alignment.topCenter,
                         end: Alignment.bottomCenter,
                         colors: [
-                          const Color(0xFFEA580C).withOpacity(0.7),
+                          const Color(0xFF99EDC3).withOpacity(0.7),
                           const Color(0xFFDC2626),
                         ],
                       ),
@@ -251,7 +251,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
               color: Colors.white,
               child: Row(
                 children: [
-                  const Icon(Icons.local_offer, color: Color(0xFFEA580C), size: 20),
+                  const Icon(Icons.local_offer, color: Color(0xFF99EDC3), size: 20),
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
@@ -322,7 +322,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                             margin: const EdgeInsets.only(right: 8),
                             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                             decoration: BoxDecoration(
-                              color: isSelected ? const Color(0xFFEA580C) : Colors.grey.shade200,
+                              color: isSelected ? const Color(0xFF99EDC3) : Colors.grey.shade200,
                               borderRadius: BorderRadius.circular(18),
                             ),
                             child: Text(
@@ -352,7 +352,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           const CircularProgressIndicator(
-                            color: Color(0xFFEA580C),
+                            color: Color(0xFF99EDC3),
                           ),
                           const SizedBox(height: 16),
                           Text(
@@ -434,7 +434,7 @@ class _RestaurantDetailScreenState extends State<RestaurantDetailScreen> {
                       );
                     },
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEA580C),
+                      backgroundColor: const Color(0xFF99EDC3),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),

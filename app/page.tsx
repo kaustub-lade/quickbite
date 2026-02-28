@@ -1,6 +1,6 @@
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-mint-400 to-mint-600 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-md w-full">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-gray-800 mb-2">🍔 QuickBite</h1>
@@ -10,7 +10,7 @@ export default function HomePage() {
         <div className="space-y-4">
           <a
             href="/admin/login"
-            className="block w-full bg-gradient-to-r from-orange-500 to-red-600 text-white py-3 px-6 rounded-lg font-medium text-center hover:shadow-lg transition-shadow"
+            className="block w-full bg-gradient-to-r from-mint-500 to-mint-600 text-white py-3 px-6 rounded-lg font-medium text-center hover:shadow-lg transition-shadow"
           >
             👑 Admin Dashboard
           </a>

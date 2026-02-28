@@ -57,7 +57,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             titleTextStyle: const TextStyle(
               fontSize: 28.0,
               fontWeight: FontWeight.w700,
-              color: Color(0xFFEA580C),
+              color: Color(0xFF99EDC3),
             ),
           ),
         ),
@@ -92,7 +92,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             child: ElevatedButton(
               onPressed: _onDone,
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEA580C),
+                backgroundColor: const Color(0xFF99EDC3),
                 foregroundColor: Colors.white,
                 padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 14),
                 shape: RoundedRectangleBorder(
@@ -125,7 +125,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         size: Size(10.0, 10.0),
         color: Color(0xFFBDBDBD),
         activeSize: Size(22.0, 10.0),
-        activeColor: Color(0xFFEA580C),
+        activeColor: Color(0xFF99EDC3),
         activeShape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(25.0)),
         ),
@@ -140,13 +140,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         width: 280,
         height: 280,
         decoration: BoxDecoration(
-          color: const Color(0xFFEA580C).withOpacity(0.1),
+          color: const Color(0xFF99EDC3).withOpacity(0.1),
           borderRadius: BorderRadius.circular(140),
         ),
         child: Icon(
           fallbackIcon,
           size: 120,
-          color: const Color(0xFFEA580C),
+          color: const Color(0xFF99EDC3),
         ),
       ),
     );

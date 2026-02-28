@@ -109,7 +109,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                         icon: const Icon(Icons.refresh),
                         label: const Text('Retry'),
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFEA580C),
+                          backgroundColor: const Color(0xFF99EDC3),
                           foregroundColor: Colors.white,
                         ),
                       ),
@@ -287,7 +287,7 @@ class _OrderHistoryScreenState extends State<OrderHistoryScreen> {
                           icon: const Icon(Icons.location_on, size: 16),
                           label: const Text('Track'),
                           style: TextButton.styleFrom(
-                            foregroundColor: const Color(0xFFEA580C),
+                            foregroundColor: const Color(0xFF99EDC3),
                             padding: const EdgeInsets.symmetric(horizontal: 8),
                           ),
                         ),

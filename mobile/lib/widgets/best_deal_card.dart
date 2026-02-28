@@ -217,7 +217,7 @@ class BestDealCard extends StatelessWidget {
                         style: const TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
-                          color: Color(0xFFEA580C),
+                          color: Color(0xFF99EDC3),
                         ),
                       ),
                     ],
@@ -282,7 +282,7 @@ class BestDealCard extends StatelessWidget {
       case 'ondc':
         return const Color(0xFF6366F1);
       default:
-        return const Color(0xFFEA580C);
+        return const Color(0xFF99EDC3);
     }
   }
 }

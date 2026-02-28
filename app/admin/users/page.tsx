@@ -43,7 +43,7 @@ export default function UsersPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mint-600"></div>
       </div>
     )
   }
@@ -76,7 +76,7 @@ export default function UsersPage() {
           <div className="text-gray-600 text-sm">Restaurant Owners</div>
         </div>
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-2xl font-bold text-orange-600">
+          <div className="text-2xl font-bold text-mint-600">
             {stats?.byRole?.admin || 0}
           </div>
           <div className="text-gray-600 text-sm">Admins</div>
@@ -91,7 +91,7 @@ export default function UsersPage() {
             onClick={() => setFilter(role)}
             className={`px-4 py-2 rounded-lg font-medium transition ${
               filter === role
-                ? 'bg-orange-600 text-white'
+                ? 'bg-mint-600 text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border'
             }`}
           >
@@ -130,7 +130,7 @@ export default function UsersPage() {
               <tr key={user._id} className="hover:bg-gray-50">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="flex items-center">
-                    <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold">
+                    <div className="w-10 h-10 bg-mint-100 rounded-full flex items-center justify-center text-mint-600 font-bold">
                       {user.name[0]}
                     </div>
                     <div className="ml-4">
@@ -153,7 +153,7 @@ export default function UsersPage() {
                   <span
                     className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                       user.role === 'admin'
-                        ? 'bg-orange-100 text-orange-800'
+                        ? 'bg-mint-100 text-mint-800'
                         : user.role === 'restaurant_owner'
                         ? 'bg-purple-100 text-purple-800'
                         : 'bg-green-100 text-green-800'

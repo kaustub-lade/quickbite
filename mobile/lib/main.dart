@@ -33,7 +33,7 @@ class QuickBiteApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(
-            seedColor: const Color(0xFFEA580C), // Orange-600
+            seedColor: const Color(0xFF99EDC3), // Mint Green
             brightness: Brightness.light,
           ),
           textTheme: GoogleFonts.interTextTheme(),
@@ -84,7 +84,7 @@ class _InitialScreenState extends State<InitialScreen> {
       return const Scaffold(
         body: Center(
           child: CircularProgressIndicator(
-            color: Color(0xFFEA580C),
+            color: Color(0xFF99EDC3),
           ),
         ),
       );

@@ -126,7 +126,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
             ),
           ],
         ),
-        backgroundColor: const Color(0xFFEA580C),
+        backgroundColor: const Color(0xFF99EDC3),
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -233,7 +233,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                 });
                 _loadOrders();
               },
-              selectedColor: const Color(0xFFEA580C),
+              selectedColor: const Color(0xFF99EDC3),
               labelStyle: TextStyle(
                 color: isSelected ? Colors.white : Colors.black87,
                 fontWeight: isSelected ? FontWeight.w600 : FontWeight.normal,
@@ -249,7 +249,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: const Color(0xFFEA580C).withOpacity(0.1),
+        color: const Color(0xFF99EDC3).withOpacity(0.1),
         border: const Border(
           bottom: BorderSide(color: Colors.grey, width: 0.5),
         ),
@@ -390,7 +390,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
                   style: const TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
-                    color: Color(0xFFEA580C),
+                    color: Color(0xFF99EDC3),
                   ),
                 ),
               ],
@@ -514,7 +514,7 @@ class _OwnerOrdersScreenState extends State<OwnerOrdersScreen> {
               _updateOrderStatus(orderId, newStatus);
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEA580C),
+              backgroundColor: const Color(0xFF99EDC3),
             ),
             child: const Text('Confirm'),
           ),

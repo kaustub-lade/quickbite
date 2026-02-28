@@ -257,7 +257,7 @@ class MenuItemCard extends StatelessWidget {
         child: const Text(
           'ADD',
           style: TextStyle(
-            color: Color(0xFFEA580C),
+            color: Color(0xFF99EDC3),
             fontWeight: FontWeight.bold,
             fontSize: 14,
           ),
@@ -271,7 +271,7 @@ class MenuItemCard extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: const Color(0xFFEA580C)),
+        border: Border.all(color: const Color(0xFF99EDC3)),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.1),
@@ -291,7 +291,7 @@ class MenuItemCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: const Icon(
                 Icons.remove,
-                color: Color(0xFFEA580C),
+                color: Color(0xFF99EDC3),
                 size: 18,
               ),
             ),
@@ -301,7 +301,7 @@ class MenuItemCard extends StatelessWidget {
             child: Text(
               '$quantity',
               style: const TextStyle(
-                color: Color(0xFFEA580C),
+                color: Color(0xFF99EDC3),
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
               ),
@@ -315,7 +315,7 @@ class MenuItemCard extends StatelessWidget {
               padding: const EdgeInsets.all(8),
               child: const Icon(
                 Icons.add,
-                color: Color(0xFFEA580C),
+                color: Color(0xFF99EDC3),
                 size: 18,
               ),
             ),
@@ -352,7 +352,7 @@ class MenuItemCard extends StatelessWidget {
               );
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEA580C),
+              backgroundColor: const Color(0xFF99EDC3),
             ),
             child: const Text('YES, REPLACE'),
           ),

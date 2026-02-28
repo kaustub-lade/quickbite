@@ -87,7 +87,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Admin Dashboard'),
-        backgroundColor: const Color(0xFFEA580C),
+        backgroundColor: const Color(0xFF99EDC3),
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -320,7 +320,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
           
           return ListTile(
             leading: CircleAvatar(
-              backgroundColor: const Color(0xFFEA580C),
+              backgroundColor: const Color(0xFF99EDC3),
               child: Text(
                 '${index + 1}',
                 style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
@@ -338,7 +338,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
               style: const TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.bold,
-                color: Color(0xFFEA580C),
+                color: Color(0xFF99EDC3),
               ),
             ),
           );
@@ -397,7 +397,7 @@ class _AdminDashboardScreenState extends State<AdminDashboardScreen> {
                     child: LinearProgressIndicator(
                       value: percentage / 100,
                       backgroundColor: Colors.grey[200],
-                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFFEA580C)),
+                      valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF99EDC3)),
                       minHeight: 8,
                     ),
                   ),

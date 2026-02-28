@@ -57,7 +57,7 @@ export default function MenuPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mint-600"></div>
       </div>
     )
   }
@@ -87,7 +87,7 @@ export default function MenuPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-2xl font-bold text-orange-600">
+          <div className="text-2xl font-bold text-mint-600">
             {menuItems.length}
           </div>
           <div className="text-gray-600 text-sm">Total Menu Items</div>
@@ -113,7 +113,7 @@ export default function MenuPage() {
             onClick={() => setFilter('all')}
             className={`px-4 py-2 rounded-lg font-medium transition ${
               filter === 'all'
-                ? 'bg-orange-600 text-white'
+                ? 'bg-mint-600 text-white'
                 : 'bg-white text-gray-700 hover:bg-gray-50 border'
             }`}
           >
@@ -125,7 +125,7 @@ export default function MenuPage() {
               onClick={() => setFilter(restaurant.id)}
               className={`px-4 py-2 rounded-lg font-medium transition ${
                 filter === restaurant.id
-                  ? 'bg-orange-600 text-white'
+                  ? 'bg-mint-600 text-white'
                   : 'bg-white text-gray-700 hover:bg-gray-50 border'
               }`}
             >

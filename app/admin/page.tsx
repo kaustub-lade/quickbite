@@ -37,7 +37,7 @@ export default function AdminDashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mint-600"></div>
       </div>
     )
   }
@@ -98,7 +98,7 @@ export default function AdminDashboard() {
             value={stats?.users.admins || 0}
             subtitle="Platform administrators"
             icon="👑"
-            color="text-orange-600"
+            color="text-mint-600"
           />
         </div>
       </div>
@@ -119,7 +119,7 @@ export default function AdminDashboard() {
             value={stats?.menuItems.total || 0}
             subtitle={`${stats?.menuItems.available || 0} available`}
             icon="🍔"
-            color="text-orange-600"
+            color="text-mint-600"
           />
           <StatCard
             title="Vegetarian Items"
@@ -157,7 +157,7 @@ export default function AdminDashboard() {
                 <tr key={user._id}>
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="flex items-center">
-                      <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold">
+                      <div className="w-10 h-10 bg-mint-100 rounded-full flex items-center justify-center text-mint-600 font-bold">
                         {user.name[0]}
                       </div>
                       <div className="ml-4">
@@ -172,7 +172,7 @@ export default function AdminDashboard() {
                     <span
                       className={`px-2 py-1 inline-flex text-xs leading-5 font-semibold rounded-full ${
                         user.role === 'admin'
-                          ? 'bg-orange-100 text-orange-800'
+                          ? 'bg-mint-100 text-mint-800'
                           : user.role === 'restaurant_owner'
                           ? 'bg-purple-100 text-purple-800'
                           : 'bg-green-100 text-green-800'

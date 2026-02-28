@@ -141,7 +141,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.editAddress != null ? 'Edit Address' : 'Add New Address'),
-        backgroundColor: const Color(0xFFEA580C),
+        backgroundColor: const Color(0xFF99EDC3),
         foregroundColor: Colors.white,
       ),
       body: Form(
@@ -317,7 +317,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               },
               title: const Text('Set as default address'),
               subtitle: const Text('This address will be used for all future orders'),
-              activeColor: const Color(0xFFEA580C),
+              activeColor: const Color(0xFF99EDC3),
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
             ),
@@ -330,7 +330,7 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
               child: ElevatedButton(
                 onPressed: _isLoading ? null : _saveAddress,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFEA580C),
+                  backgroundColor: const Color(0xFF99EDC3),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
                   ),
@@ -372,10 +372,10 @@ class _AddAddressScreenState extends State<AddAddressScreen> {
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 12),
           decoration: BoxDecoration(
-            color: isSelected ? const Color(0xFFEA580C) : Colors.grey.shade100,
+            color: isSelected ? const Color(0xFF99EDC3) : Colors.grey.shade100,
             borderRadius: BorderRadius.circular(8),
             border: Border.all(
-              color: isSelected ? const Color(0xFFEA580C) : Colors.grey.shade300,
+              color: isSelected ? const Color(0xFF99EDC3) : Colors.grey.shade300,
               width: 2,
             ),
           ),

@@ -97,7 +97,7 @@ class _CouponGiftCardWidgetState extends State<CouponGiftCardWidget> {
     return _buildAddButton(
       icon: Icons.local_offer,
       text: 'Apply Coupon',
-      color: const Color(0xFFEA580C),
+      color: const Color(0xFF99EDC3),
       onTap: () {
         setState(() {
           _showCouponInput = true;

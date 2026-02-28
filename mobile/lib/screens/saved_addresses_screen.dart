@@ -135,7 +135,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.selectMode ? 'Select Address' : 'Saved Addresses'),
-        backgroundColor: const Color(0xFFEA580C),
+        backgroundColor: const Color(0xFF99EDC3),
         foregroundColor: Colors.white,
       ),
       body: isLoading
@@ -157,7 +157,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
             _loadAddresses();
           }
         },
-        backgroundColor: const Color(0xFFEA580C),
+        backgroundColor: const Color(0xFF99EDC3),
         icon: const Icon(Icons.add),
         label: const Text('Add Address'),
       ),
@@ -191,7 +191,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
             icon: const Icon(Icons.refresh),
             label: const Text('Retry'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEA580C),
+              backgroundColor: const Color(0xFF99EDC3),
             ),
           ),
         ],
@@ -236,7 +236,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
             icon: const Icon(Icons.add_location_alt),
             label: const Text('Add Your First Address'),
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEA580C),
+              backgroundColor: const Color(0xFF99EDC3),
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
             ),
           ),
@@ -266,7 +266,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
         side: address.isDefault
-            ? const BorderSide(color: Color(0xFFEA580C), width: 2)
+            ? const BorderSide(color: Color(0xFF99EDC3), width: 2)
             : BorderSide.none,
       ),
       child: InkWell(
@@ -290,13 +290,13 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
                       color: address.isDefault
-                          ? const Color(0xFFEA580C).withOpacity(0.1)
+                          ? const Color(0xFF99EDC3).withOpacity(0.1)
                           : Colors.grey.shade100,
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Icon(
                       _getIconForLabel(address.label),
-                      color: address.isDefault ? const Color(0xFFEA580C) : Colors.grey.shade700,
+                      color: address.isDefault ? const Color(0xFF99EDC3) : Colors.grey.shade700,
                     ),
                   ),
                   const SizedBox(width: 12),
@@ -316,7 +316,7 @@ class _SavedAddressesScreenState extends State<SavedAddressesScreen> {
                             margin: const EdgeInsets.only(top: 4),
                             padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFEA580C),
+                              color: const Color(0xFF99EDC3),
                               borderRadius: BorderRadius.circular(4),
                             ),
                             child: const Text(

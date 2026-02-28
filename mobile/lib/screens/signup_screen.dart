@@ -138,7 +138,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                        borderSide: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                       ),
                     ),
                     validator: (value) {
@@ -171,7 +171,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                        borderSide: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                       ),
                     ),
                     validator: (value) {
@@ -204,7 +204,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                        borderSide: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                       ),
                     ),
                     validator: (value) {
@@ -247,7 +247,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                        borderSide: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                       ),
                     ),
                     validator: (value) {
@@ -290,7 +290,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                        borderSide: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                       ),
                     ),
                     validator: (value) {
@@ -316,7 +316,7 @@ class _SignupScreenState extends State<SignupScreen> {
                             _agreedToTerms = value ?? false;
                           });
                         },
-                        activeColor: const Color(0xFFEA580C),
+                        activeColor: const Color(0xFF99EDC3),
                       ),
                       Expanded(
                         child: GestureDetector(
@@ -333,7 +333,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 TextSpan(
                                   text: 'Terms & Conditions',
                                   style: TextStyle(
-                                    color: Color(0xFFEA580C),
+                                    color: Color(0xFF99EDC3),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -341,7 +341,7 @@ class _SignupScreenState extends State<SignupScreen> {
                                 TextSpan(
                                   text: 'Privacy Policy',
                                   style: TextStyle(
-                                    color: Color(0xFFEA580C),
+                                    color: Color(0xFF99EDC3),
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
@@ -359,7 +359,7 @@ class _SignupScreenState extends State<SignupScreen> {
                   ElevatedButton(
                     onPressed: authProvider.isLoading ? null : _handleSignup,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEA580C),
+                      backgroundColor: const Color(0xFF99EDC3),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -402,7 +402,7 @@ class _SignupScreenState extends State<SignupScreen> {
                         child: const Text(
                           'Login',
                           style: TextStyle(
-                            color: Color(0xFFEA580C),
+                            color: Color(0xFF99EDC3),
                             fontWeight: FontWeight.bold,
                           ),
                         ),

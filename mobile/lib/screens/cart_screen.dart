@@ -350,7 +350,7 @@ class _CartScreenState extends State<CartScreen> {
                           _showCheckoutDialog(context, cart);
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color(0xFFEA580C),
+                          backgroundColor: const Color(0xFF99EDC3),
                           padding: const EdgeInsets.symmetric(vertical: 16),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(12),
@@ -479,7 +479,7 @@ class _CartScreenState extends State<CartScreen> {
                     child: const Icon(
                       Icons.add,
                       size: 16,
-                      color: Color(0xFFEA580C),
+                      color: Color(0xFF99EDC3),
                     ),
                   ),
                 ),
@@ -551,7 +551,7 @@ class _CartScreenState extends State<CartScreen> {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEA580C),
+                backgroundColor: const Color(0xFF99EDC3),
               ),
               child: const Text('LOGIN'),
             ),

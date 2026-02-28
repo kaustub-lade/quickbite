@@ -12,6 +12,8 @@ export interface IRestaurant {
   distance?: number
   openingHours?: string
   platforms?: ('swiggy' | 'zomato' | 'ondc')[]
+  swiggySlug?: string  // URL slug for Swiggy (e.g., "paradise-biryani-mira-road-mumbai-123456")
+  zomatoSlug?: string  // URL slug for Zomato (e.g., "paradise-biryani-mira-road")
   reviews?: Array<{
     userId: string
     userName: string
@@ -69,6 +71,14 @@ const restaurantSchema = new mongoose.Schema<IRestaurant>(
       type: [String],
       enum: ['swiggy', 'zomato', 'ondc'],
       default: ['swiggy', 'zomato'],
+    },
+    swiggySlug: {
+      type: String,
+      index: true,  // Index for faster scraping lookups
+    },
+    zomatoSlug: {
+      type: String,
+      index: true,  // Index for faster scraping lookups
     },
     reviews: {
       type: [

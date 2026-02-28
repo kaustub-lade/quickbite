@@ -23,7 +23,7 @@ class ProfileScreen extends StatelessWidget {
       backgroundColor: Colors.grey.shade50,
       appBar: AppBar(
         title: const Text('Profile'),
-        backgroundColor: const Color(0xFFEA580C),
+        backgroundColor: const Color(0xFF99EDC3),
         foregroundColor: Colors.white,
         elevation: 0,
       ),
@@ -71,7 +71,7 @@ class ProfileScreen extends StatelessWidget {
                 );
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFFEA580C),
+                backgroundColor: const Color(0xFF99EDC3),
                 padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -106,7 +106,7 @@ class ProfileScreen extends StatelessWidget {
             width: double.infinity,
             decoration: const BoxDecoration(
               gradient: LinearGradient(
-                colors: [Color(0xFFEA580C), Color(0xFFDC2626)],
+                colors: [Color(0xFF99EDC3), Color(0xFFDC2626)],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,
               ),
@@ -131,7 +131,7 @@ class ProfileScreen extends StatelessWidget {
                           style: const TextStyle(
                             fontSize: 40,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFEA580C),
+                            color: Color(0xFF99EDC3),
                           ),
                         ),
                       ),

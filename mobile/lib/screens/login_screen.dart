@@ -163,7 +163,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     style: TextStyle(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      color: Color(0xFFEA580C),
+                      color: Color(0xFF99EDC3),
                     ),
                     textAlign: TextAlign.center,
                   ),
@@ -215,7 +215,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                        borderSide: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                       ),
                     ),
                     validator: (value) {
@@ -258,7 +258,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
-                        borderSide: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                        borderSide: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                       ),
                     ),
                     validator: (value) {
@@ -288,7 +288,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                       child: const Text(
                         'Forgot Password?',
-                        style: TextStyle(color: Color(0xFFEA580C)),
+                        style: TextStyle(color: Color(0xFF99EDC3)),
                       ),
                     ),
                   ),
@@ -299,7 +299,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ElevatedButton(
                     onPressed: authProvider.isLoading ? null : _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEA580C),
+                      backgroundColor: const Color(0xFF99EDC3),
                       padding: const EdgeInsets.symmetric(vertical: 16),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
@@ -385,7 +385,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         child: const Text(
                           'Sign Up',
                           style: TextStyle(
-                            color: Color(0xFFEA580C),
+                            color: Color(0xFF99EDC3),
                             fontWeight: FontWeight.bold,
                           ),
                         ),

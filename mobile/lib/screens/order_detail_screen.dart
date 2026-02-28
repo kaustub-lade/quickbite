@@ -103,12 +103,12 @@ class OrderDetailScreen extends StatelessWidget {
                       Container(
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                          color: const Color(0xFFEA580C).withOpacity(0.1),
+                          color: const Color(0xFF99EDC3).withOpacity(0.1),
                           borderRadius: BorderRadius.circular(8),
                         ),
                         child: const Icon(
                           Icons.restaurant,
-                          color: Color(0xFFEA580C),
+                          color: Color(0xFF99EDC3),
                           size: 20,
                         ),
                       ),

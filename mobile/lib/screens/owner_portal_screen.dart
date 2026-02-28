@@ -53,7 +53,7 @@ class _OwnerPortalScreenState extends State<OwnerPortalScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Restaurant Owner Portal'),
-        backgroundColor: const Color(0xFFEA580C),
+        backgroundColor: const Color(0xFF99EDC3),
         foregroundColor: Colors.white,
         actions: [
           IconButton(
@@ -227,7 +227,7 @@ class _OwnerPortalScreenState extends State<OwnerPortalScreen> {
                     icon: const Icon(Icons.receipt_long, size: 18),
                     label: const Text('Orders'),
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFEA580C),
+                      backgroundColor: const Color(0xFF99EDC3),
                       foregroundColor: Colors.white,
                       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                     ),

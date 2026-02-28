@@ -117,7 +117,7 @@ class OrderSuccessScreen extends StatelessWidget {
                     ),
                   ),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFEA580C),
+                    backgroundColor: const Color(0xFF99EDC3),
                     foregroundColor: Colors.white,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
@@ -145,9 +145,9 @@ class OrderSuccessScreen extends StatelessWidget {
                     ),
                   ),
                   style: OutlinedButton.styleFrom(
-                    foregroundColor: const Color(0xFFEA580C),
+                    foregroundColor: const Color(0xFF99EDC3),
                     side: const BorderSide(
-                      color: Color(0xFFEA580C),
+                      color: Color(0xFF99EDC3),
                       width: 2,
                     ),
                     shape: RoundedRectangleBorder(

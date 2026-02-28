@@ -218,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Text(
                         '🍽️ QuickBite',
                         style: TextStyle(
-                          color: Color(0xFFEA580C),
+                          color: Color(0xFF99EDC3),
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
@@ -245,7 +245,7 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.account_circle_outlined, color: Color(0xFFEA580C)),
+                  icon: const Icon(Icons.account_circle_outlined, color: Color(0xFF99EDC3)),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -257,7 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   Stack(
                     children: [
                       IconButton(
-                        icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFFEA580C)),
+                        icon: const Icon(Icons.shopping_cart_outlined, color: Color(0xFF99EDC3)),
                         onPressed: () {
                           Navigator.push(
                             context,
@@ -346,7 +346,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Row(
                     children: [
-                      const Icon(Icons.local_offer, color: Color(0xFFEA580C), size: 24),
+                      const Icon(Icons.local_offer, color: Color(0xFF99EDC3), size: 24),
                       const SizedBox(width: 8),
                       const Text(
                         '🔥 Best Deals',
@@ -388,7 +388,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
                   child: Row(
                     children: [
-                      const Icon(Icons.local_fire_department, color: Color(0xFFEA580C), size: 24),
+                      const Icon(Icons.local_fire_department, color: Color(0xFF99EDC3), size: 24),
                       const SizedBox(width: 8),
                       const Text(
                         'Popular Near You',
@@ -450,11 +450,11 @@ class _HomeScreenState extends State<HomeScreen> {
                                 height: 80,
                                 decoration: BoxDecoration(
                                   gradient: LinearGradient(
-                                    colors: [Color(0xFFEA580C).withOpacity(0.3), Color(0xFFDC2626).withOpacity(0.3)],
+                                    colors: [Color(0xFF99EDC3).withOpacity(0.3), Color(0xFFDC2626).withOpacity(0.3)],
                                   ),
                                 ),
                                 child: Center(
-                                  child: Icon(Icons.restaurant, size: 40, color: Color(0xFFEA580C)),
+                                  child: Icon(Icons.restaurant, size: 40, color: Color(0xFF99EDC3)),
                                 ),
                               ),
                               Padding(
@@ -495,7 +495,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                         '${restaurant['orderCount']} orders',
                                         style: TextStyle(
                                           fontSize: 12,
-                                          color: Color(0xFFEA580C),
+                                          color: Color(0xFF99EDC3),
                                           fontWeight: FontWeight.w600,
                                         ),
                                       ),
@@ -521,7 +521,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   padding: const EdgeInsets.fromLTRB(16, 0, 16, 8),
                   child: Row(
                     children: [
-                      const Icon(Icons.trending_up, color: Color(0xFFEA580C), size: 24),
+                      const Icon(Icons.trending_up, color: Color(0xFF99EDC3), size: 24),
                       const SizedBox(width: 8),
                       const Text(
                         'Trending Now',
@@ -617,21 +617,21 @@ class _HomeScreenState extends State<HomeScreen> {
                                   style: const TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: Color(0xFFEA580C),
+                                    color: Color(0xFF99EDC3),
                                   ),
                                 ),
                                 if (item['orderCount'] != null && item['orderCount'] > 0)
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                                     decoration: BoxDecoration(
-                                      color: Color(0xFFEA580C).withOpacity(0.1),
+                                      color: Color(0xFF99EDC3).withOpacity(0.1),
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                     child: Text(
                                       '${item['orderCount']} sold',
                                       style: const TextStyle(
                                         fontSize: 11,
-                                        color: Color(0xFFEA580C),
+                                        color: Color(0xFF99EDC3),
                                         fontWeight: FontWeight.w600,
                                       ),
                                     ),
@@ -749,7 +749,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     icon: const Icon(Icons.arrow_back, size: 18),
                     label: const Text('Back to categories'),
                     style: TextButton.styleFrom(
-                      foregroundColor: const Color(0xFFEA580C),
+                      foregroundColor: const Color(0xFF99EDC3),
                     ),
                   ),
                 ),
@@ -789,7 +789,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ElevatedButton(
                             onPressed: () => fetchRecommendations(selectedCategory!),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFFEA580C),
+                              backgroundColor: const Color(0xFF99EDC3),
                             ),
                             child: const Text('Try Again'),
                           ),
@@ -853,7 +853,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          const Color(0xFFEA580C).withOpacity(0.9),
+                          const Color(0xFF99EDC3).withOpacity(0.9),
                           const Color(0xFFDC2626).withOpacity(0.9),
                         ],
                       ),

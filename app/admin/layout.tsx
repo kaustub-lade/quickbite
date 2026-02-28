@@ -44,7 +44,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mint-600 mx-auto"></div>
           <p className="mt-4 text-gray-600">Loading...</p>
         </div>
       </div>
@@ -65,7 +65,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="flex flex-col h-full">
           {/* Logo */}
           <div className="p-6 border-b">
-            <h1 className="text-2xl font-bold text-orange-600">🍽️ QuickBite</h1>
+            <h1 className="text-2xl font-bold text-mint-600">🍽️ QuickBite</h1>
             <p className="text-sm text-gray-500 mt-1">Admin Dashboard</p>
           </div>
 
@@ -79,7 +79,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   href={item.href}
                   className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition ${
                     isActive
-                      ? 'bg-orange-50 text-orange-600 font-semibold'
+                      ? 'bg-mint-50 text-mint-600 font-semibold'
                       : 'text-gray-700 hover:bg-gray-50'
                   }`}
                 >
@@ -93,7 +93,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {/* User Info & Logout */}
           <div className="p-4 border-t">
             <div className="flex items-center space-x-3 mb-3">
-              <div className="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-600 font-bold">
+              <div className="w-10 h-10 bg-mint-100 rounded-full flex items-center justify-center text-mint-600 font-bold">
                 {user?.name?.[0] || 'A'}
               </div>
               <div className="flex-1 min-w-0">

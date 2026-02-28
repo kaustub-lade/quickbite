@@ -353,7 +353,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Color(0xFFEA580C),
+                            color: Color(0xFF99EDC3),
                           ),
                         ),
                       ],
@@ -384,7 +384,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                 elevation: 2,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
-                  side: const BorderSide(color: Color(0xFFEA580C), width: 2),
+                  side: const BorderSide(color: Color(0xFF99EDC3), width: 2),
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(16),
@@ -396,7 +396,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                           Container(
                             padding: const EdgeInsets.all(8),
                             decoration: BoxDecoration(
-                              color: const Color(0xFFEA580C).withOpacity(0.1),
+                              color: const Color(0xFF99EDC3).withOpacity(0.1),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
@@ -426,7 +426,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                                           vertical: 2,
                                         ),
                                         decoration: BoxDecoration(
-                                          color: const Color(0xFFEA580C),
+                                          color: const Color(0xFF99EDC3),
                                           borderRadius: BorderRadius.circular(4),
                                         ),
                                         child: const Text(
@@ -477,8 +477,8 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               icon: const Icon(Icons.edit_location),
                               label: const Text('Change Address'),
                               style: OutlinedButton.styleFrom(
-                                foregroundColor: const Color(0xFFEA580C),
-                                side: const BorderSide(color: Color(0xFFEA580C)),
+                                foregroundColor: const Color(0xFF99EDC3),
+                                side: const BorderSide(color: Color(0xFF99EDC3)),
                               ),
                             ),
                           ),
@@ -494,7 +494,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                               icon: const Icon(Icons.add),
                               label: const Text('New Address'),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFEA580C),
+                                backgroundColor: const Color(0xFF99EDC3),
                                 foregroundColor: Colors.white,
                               ),
                             ),
@@ -623,7 +623,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                       icon: const Icon(Icons.bookmark),
                       label: const Text('Choose from saved addresses'),
                       style: TextButton.styleFrom(
-                        foregroundColor: const Color(0xFFEA580C),
+                        foregroundColor: const Color(0xFF99EDC3),
                       ),
                     ),
                 ],
@@ -645,7 +645,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   _paymentMethod = value!;
                 });
               },
-              activeColor: const Color(0xFFEA580C),
+              activeColor: const Color(0xFF99EDC3),
             ),
             RadioListTile<String>(
               title: const Text('Online Payment'),
@@ -657,7 +657,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
                   _paymentMethod = value!;
                 });
               },
-              activeColor: const Color(0xFFEA580C),
+              activeColor: const Color(0xFF99EDC3),
             ),
             const SizedBox(height: 24),
 
@@ -683,7 +683,7 @@ class _CheckoutScreenState extends State<CheckoutScreen> {
               child: ElevatedButton(
                 onPressed: _isPlacingOrder ? null : _placeOrder,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFEA580C),
+                  backgroundColor: const Color(0xFF99EDC3),
                   foregroundColor: Colors.white,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -816,7 +816,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
         children: [
           if (_isProcessing)
             const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFFEA580C)),
+              valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF99EDC3)),
             ),
           if (!_isProcessing && _paymentSuccess)
             const Icon(
@@ -842,7 +842,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
             style: const TextStyle(
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              color: Color(0xFFEA580C),
+              color: Color(0xFF99EDC3),
             ),
           ),
         ],
@@ -863,7 +863,7 @@ class _PaymentDialogState extends State<_PaymentDialog> {
               _initiatePayment();
             },
             style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFEA580C),
+              backgroundColor: const Color(0xFF99EDC3),
               foregroundColor: Colors.white,
             ),
             child: const Text('Retry'),

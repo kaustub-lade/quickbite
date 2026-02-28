@@ -21,16 +21,16 @@ class CategoryCard extends StatelessWidget {
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
         decoration: BoxDecoration(
-          color: isSelected ? const Color(0xFFEA580C) : Colors.white,
+          color: isSelected ? const Color(0xFF99EDC3) : Colors.white,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
-            color: isSelected ? const Color(0xFFEA580C) : Colors.grey.shade200,
+            color: isSelected ? const Color(0xFF99EDC3) : Colors.grey.shade200,
             width: 2,
           ),
           boxShadow: [
             if (isSelected)
               BoxShadow(
-                color: const Color(0xFFEA580C).withOpacity(0.3),
+                color: const Color(0xFF99EDC3).withOpacity(0.3),
                 blurRadius: 12,
                 offset: const Offset(0, 4),
               )

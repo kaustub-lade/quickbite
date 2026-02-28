@@ -37,7 +37,7 @@ export default function RestaurantsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-orange-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-mint-600"></div>
       </div>
     )
   }
@@ -54,7 +54,7 @@ export default function RestaurantsPage() {
       {/* Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
         <div className="bg-white rounded-lg shadow p-6">
-          <div className="text-2xl font-bold text-orange-600">
+          <div className="text-2xl font-bold text-mint-600">
             {restaurants.length}
           </div>
           <div className="text-gray-600 text-sm">Total Restaurants</div>
@@ -87,7 +87,7 @@ export default function RestaurantsPage() {
                 className="w-full h-48 object-cover"
               />
             ) : (
-              <div className="w-full h-48 bg-gradient-to-br from-orange-400 to-red-500 flex items-center justify-center">
+              <div className="w-full h-48 bg-gradient-to-br from-mint-400 to-red-500 flex items-center justify-center">
                 <span className="text-6xl">{restaurant.name[0]}</span>
               </div>
             )}
