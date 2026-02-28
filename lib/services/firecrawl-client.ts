@@ -1,7 +1,7 @@
 import FirecrawlApp from '@mendable/firecrawl-js'
 
 export class FirecrawlClient {
-  private app: FirecrawlApp
+  private app: FirecrawlApp | null
   private isConfigured: boolean
 
   constructor() {
@@ -9,17 +9,18 @@ export class FirecrawlClient {
     this.isConfigured = !!apiKey
     
     if (!this.isConfigured) {
-      console.warn('⚠️ FIRECRAWL_API_KEY not configured - scraping will fail')
+      console.warn('⚠️ FIRECRAWL_API_KEY not configured - scraping will be disabled')
+      this.app = null
+    } else {
+      this.app = new FirecrawlApp({ apiKey })
     }
-    
-    this.app = new FirecrawlApp({ apiKey })
   }
 
   /**
    * Scrape a single page and return markdown content
    */
   async scrapePage(url: string): Promise<{ markdown: string; html?: string } | null> {
-    if (!this.isConfigured) {
+    if (!this.isConfigured || !this.app) {
       throw new Error('Firecrawl API key not configured. Add FIRECRAWL_API_KEY to .env.local')
     }
 
