@@ -11,12 +11,12 @@ import Restaurant from '@/lib/models/Restaurant'
  */
 export async function GET(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   await connectToDatabase()
   
   try {
-    const { id } = params
+    const { id } = await params
     const searchParams = req.nextUrl.searchParams
     const platform = searchParams.get('platform') as 'swiggy' | 'zomato' | 'both' | null
     
