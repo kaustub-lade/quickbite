@@ -288,13 +288,29 @@ class _LoginScreenState extends State<LoginScreen> {
                             'Continue with Google',
                             style: TextStyle(color: Colors.black87),
                           ),
-                                const SnackBar(content: Text('Forgot password feature coming soon!')),
-                        );
-                      },
-                      child: const Text(
-                        'Forgot Password?',
-                        style: TextStyle(color: Color(0xFF99EDC3)),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        side: const BorderSide(color: Colors.grey, width: 1),
                       ),
+                      elevation: 0,
+                    ),
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Forgot Password  
+                  TextButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Forgot password feature coming soon!')),
+                      );
+                    },
+                    child: const Text(
+                      'Forgot Password?',
+                      style: TextStyle(color: Color(0xFF99EDC3)),
                     ),
                   ),
                   
