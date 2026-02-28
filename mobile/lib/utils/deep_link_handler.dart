@@ -1,23 +1,26 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'dart:async';
-import 'package:uni_links/uni_links.dart';
+// import 'package:flutter/services.dart';
+// import 'dart:async';
+// import 'package:uni_links/uni_links.dart';
 import '../screens/restaurant_detail_screen.dart';
 
+// NOTE: Deep linking disabled until uni_links is replaced with app_links
+// uni_links package has namespace issues with newer Android Gradle Plugin
 class DeepLinkHandler {
   static final DeepLinkHandler _instance = DeepLinkHandler._internal();
   factory DeepLinkHandler() => _instance;
   DeepLinkHandler._internal();
 
-  StreamSubscription? _sub;
+  // StreamSubscription? _sub;
   BuildContext? _context;
 
   // Initialize deep link handling
   void initialize(BuildContext context) {
     _context = context;
-    _initUniLinks();
+    // _initUniLinks(); // Disabled
   }
 
+  /* Disabled until app_links integration
   Future<void> _initUniLinks() async {
     try {
       // Get initial link if app was opened from a link
@@ -38,6 +41,7 @@ class DeepLinkHandler {
       debugPrint('Failed to get initial link: ${e.message}');
     }
   }
+  */
 
   void _handleDeepLink(String link) {
     if (_context == null) return;
