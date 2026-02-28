@@ -96,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
       if (response['success'] == true) {
         // Update auth provider
-        await authProvider.setUser(
+        await authProvider.setAuthData(
           response['user'],
           response['token'],
         );

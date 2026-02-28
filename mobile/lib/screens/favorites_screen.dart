@@ -244,6 +244,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> with SingleTickerProv
             MaterialPageRoute(
               builder: (context) => RestaurantDetailScreen(
                 restaurantId: favorite.itemId,
+                restaurantName: favorite.name,
+                cuisine: '',
+                rating: 0.0,
+                deliveryTime: 0,
+                location: '',
               ),
             ),
           );
@@ -330,6 +335,11 @@ class _FavoritesScreenState extends State<FavoritesScreen> with SingleTickerProv
                   MaterialPageRoute(
                     builder: (context) => RestaurantDetailScreen(
                       restaurantId: favorite.restaurantId!,
+                      restaurantName: favorite.name,
+                      cuisine: '',
+                      rating: 0.0,
+                      deliveryTime: 0,
+                      location: '',
                     ),
                   ),
                 );

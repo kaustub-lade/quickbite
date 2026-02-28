@@ -41,11 +41,11 @@ class _CartScreenState extends State<CartScreen> {
           code: code,
           orderAmount: cart.totalAmount,
           restaurantId: cart.restaurantId ?? '',
-          items: cart.items.map((item) => {
-            'id': item.id,
-            'name': item.name,
-            'category': item.category ?? '',
-            'price': item.price,
+          items: cart.items.values.map((item) => {
+            'id': item.menuItem.id,
+            'name': item.menuItem.name,
+            'category': item.menuItem.category ?? '',
+            'price': item.menuItem.price,
             'quantity': item.quantity,
           }).toList(),
         );

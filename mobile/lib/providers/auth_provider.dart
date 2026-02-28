@@ -173,6 +173,24 @@ class AuthProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  // Set authentication data (for Google Sign-In, etc.)
+  Future<void> setAuthData(Map<String, dynamic> userData, String token) async {
+    try {
+      _user = User.fromJson(userData);
+      _token = token;
+
+      // Store credentials
+      final prefs = await SharedPreferences.getInstance();
+      await prefs.setString('auth_token', token);
+      await prefs.setString('user_data', json.encode(userData));
+
+      notifyListeners();
+    } catch (e) {
+      _error = 'Failed to set auth data: ${e.toString()}';
+      notifyListeners();
+    }
+  }
+
   void clearError() {
     _error = null;
     notifyListeners();
