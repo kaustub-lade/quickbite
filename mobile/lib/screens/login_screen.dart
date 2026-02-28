@@ -272,7 +272,11 @@ class _LoginScreenState extends State<LoginScreen> {
                     },
                   ),
                   
-                  const SizedBo_isLoading ? null : _handleGoogleSignIn,
+                  const SizedBox(height: 24),
+
+                  // Google Sign-In Button
+                  ElevatedButton.icon(
+                    onPressed: _isLoading ? null : _handleGoogleSignIn,
                     icon: const Text('🔍', style: TextStyle(fontSize: 20)),
                     label: _isLoading
                         ? const SizedBox(
@@ -283,6 +287,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         : const Text(
                             'Continue with Google',
                             style: TextStyle(color: Colors.black87),
+                          ),
                                 const SnackBar(content: Text('Forgot password feature coming soon!')),
                         );
                       },
