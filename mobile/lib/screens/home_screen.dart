@@ -218,7 +218,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       const Text(
                         '🍽️ QuickBite',
                         style: TextStyle(
-                          color: Color(0xFF99EDC3),
+                          color: Colors.orange,
                           fontWeight: FontWeight.bold,
                           fontSize: 20,
                         ),
@@ -239,13 +239,13 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Text(
                     'Smart food ordering',
-                    style: TextStyle(fontSize: 12, color: Colors.grey.shade600),
+                    style: TextStyle(fontSize: 12, color: Colors.orange),
                   ),
                 ],
               ),
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.account_circle_outlined, color: Color(0xFF99EDC3)),
+                  icon: const Icon(Icons.account_circle_outlined, color: Colors.orange),
                   onPressed: () {
                     Navigator.push(
                       context,
@@ -701,9 +701,14 @@ class _HomeScreenState extends State<HomeScreen> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Text(
-                                category['emoji']!,
-                                style: const TextStyle(fontSize: 48),
+                              ClipRRect(
+                                borderRadius: BorderRadius.circular(24),
+                                child: Image.asset(
+                                  'assets/images/${category['value']}.png',
+                                  height: 48,
+                                  width: 48,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               const SizedBox(height: 8),
                               Text(
